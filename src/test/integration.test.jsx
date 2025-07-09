@@ -53,7 +53,7 @@ vi.mock('../Components/Feed/Feed', () => ({
 }))
 
 vi.mock('../Pages/Home/Home', () => ({
-  default: ({ sidebar }) => {
+  default: function MockHome({ sidebar }) {
     const [category, setCategory] = React.useState(sharedState.category)
     
     React.useEffect(() => {
@@ -81,7 +81,7 @@ vi.mock('../Pages/Home/Home', () => ({
 }))
 
 vi.mock('../Pages/Video/Video', () => ({
-  default: () => {
+  default: function MockVideo() {
     const { videoId, categoryId } = useParams()
     return (
       <div data-testid="video-page">
