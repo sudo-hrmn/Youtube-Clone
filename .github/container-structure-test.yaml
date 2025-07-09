@@ -1,0 +1,41 @@
+schemaVersion: 2.0.0
+
+commandTests:
+  - name: "nginx version"
+    command: "nginx"
+    args: ["-v"]
+    expectedError: ["nginx version: nginx/.*"]
+
+  - name: "health check endpoint"
+    command: "curl"
+    args: ["-f", "http://localhost/health"]
+    setup: [["nginx", "-g", "daemon off;"]]
+    expectedOutput: ["healthy"]
+
+fileExistenceTests:
+  - name: 'application files'
+    path: '/usr/share/nginx/html'
+    shouldExist: true
+    isDirectory: true
+
+  - name: 'index.html exists'
+    path: '/usr/share/nginx/html/index.html'
+    shouldExist: true
+
+  - name: 'nginx config'
+    path: '/etc/nginx/nginx.conf'
+    shouldExist: true
+
+fileContentTests:
+  - name: 'nginx runs as non-root'
+    path: '/etc/nginx/nginx.conf'
+    expectedContents: ['user nginx;']
+
+  - name: 'gzip enabled'
+    path: '/etc/nginx/nginx.conf'
+    expectedContents: ['gzip on;']
+
+metadataTest:
+  exposedPorts: ["80"]
+  user: "nginx"
+  workdir: "/usr/share/nginx/html"

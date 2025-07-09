@@ -1,0 +1,36 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: youtube-clone-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+    nginx.ingress.kubernetes.io/rate-limit-window: "1m"
+    nginx.ingress.kubernetes.io/enable-modsecurity: "true"
+    nginx.ingress.kubernetes.io/enable-owasp-core-rules: "true"
+spec:
+  tls:
+  - hosts:
+    - youtube-clone.yourdomain.com
+    - www.youtube-clone.yourdomain.com
+    secretName: youtube-clone-prod-tls
+  rules:
+  - host: youtube-clone.yourdomain.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: youtube-clone-service
+            port:
+              number: 80
+  - host: www.youtube-clone.yourdomain.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: youtube-clone-service
+            port:
+              number: 80

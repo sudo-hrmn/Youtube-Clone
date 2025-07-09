@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+metadata:
+  name: youtube-clone-base
+
+resources:
+  - deployment.yaml
+  - service.yaml
+  - ingress.yaml
+  - configmap.yaml
+  - hpa.yaml
+  - pdb.yaml
+
+commonLabels:
+  app: youtube-clone
+  project: youtube-clone
+
+images:
+  - name: ghcr.io/sudo-hrmn/youtube-clone
+    newTag: latest

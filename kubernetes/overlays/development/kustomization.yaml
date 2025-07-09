@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+metadata:
+  name: youtube-clone-development
+
+namespace: youtube-clone-dev
+
+resources:
+  - ../../base
+
+patchesStrategicMerge:
+  - deployment-patch.yaml
+  - ingress-patch.yaml
+
+commonLabels:
+  environment: development
+
+images:
+  - name: ghcr.io/sudo-hrmn/youtube-clone
+    newTag: dev-latest

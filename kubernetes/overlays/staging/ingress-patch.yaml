@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: youtube-clone-ingress
+spec:
+  tls:
+  - hosts:
+    - youtube-clone-staging.yourdomain.com
+    secretName: youtube-clone-staging-tls
+  rules:
+  - host: youtube-clone-staging.yourdomain.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: youtube-clone-service
+            port:
+              number: 80
