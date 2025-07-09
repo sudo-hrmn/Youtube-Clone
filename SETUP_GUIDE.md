@@ -47,8 +47,7 @@ KUBE_CONFIG_PROD=base64_encoded_kubeconfig_for_production
 
 #### A. Choose Your Kubernetes Platform
 - **Local Development**: minikube, kind, or Docker Desktop
-- **Cloud Providers**: EKS (AWS), GKE (Google), AKS (Azure)
-- **Managed**: DigitalOcean Kubernetes, Linode LKE
+-
 
 #### B. Install Required Tools
 ```bash

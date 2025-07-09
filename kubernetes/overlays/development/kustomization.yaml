@@ -18,4 +18,5 @@ commonLabels:
 
 images:
   - name: ghcr.io/sudo-hrmn/youtube-clone
-    newTag: dev-latest
+    newName: youtube-clone
+    newTag: latest
