@@ -59,11 +59,13 @@ const PlayVideo = ({ videoId }) => {
 
       <div className="play-video-info">
         <p>
-          {parseInt(videoDetail.statistics.viewCount).toLocaleString()} views &bull;{' '}
-          {new Date(videoDetail.snippet.publishedAt).toDateString()}
+          {videoDetail?.statistics?.viewCount ? 
+            parseInt(videoDetail.statistics.viewCount).toLocaleString() : '0'} views &bull;{' '}
+          {videoDetail?.snippet?.publishedAt ? 
+            new Date(videoDetail.snippet.publishedAt).toDateString() : 'Unknown date'}
         </p>
         <div>
-          <span><img src={like} alt="like" /> {videoDetail.statistics.likeCount}</span>
+          <span><img src={like} alt="like" /> {videoDetail?.statistics?.likeCount || '0'}</span>
           <span><img src={dislike} alt="dislike" /> Dislike</span>
           <span><img src={share} alt="share" /> Share</span>
           <span><img src={save} alt="save" /> Save</span>
@@ -73,27 +75,29 @@ const PlayVideo = ({ videoId }) => {
       <hr />
 
       <div className="publisher">
-        <img src={channelDetail.snippet.thumbnails.default.url} alt="channel" />
+        <img src={channelDetail?.snippet?.thumbnails?.default?.url || '/default-channel.png'} alt="channel" />
         <div>
-          <p>{videoDetail.snippet.channelTitle}</p>
-          <span> {value_converter(channelDetail.statistics.subscriberCount)} subscribers</span>
+          <p>{videoDetail?.snippet?.channelTitle || 'Unknown Channel'}</p>
+          <span> {channelDetail?.statistics?.subscriberCount ? 
+            value_converter(channelDetail.statistics.subscriberCount) : '0'} subscribers</span>
         </div>
         <button>Subscribe</button>
       </div>
 
       <div className="vid-description">
-        <p>{videoDetail.snippet.description}</p>
+        <p>{videoDetail?.snippet?.description || 'No description available'}</p>
         <hr />
-        <h4>{videoDetail.statistics.commentCount} Comments</h4>
+        <h4>{videoDetail?.statistics?.commentCount || '0'} Comments</h4>
 
         {comments.map((comment, index) => {
-          const topComment = comment.snippet.topLevelComment.snippet;
+          const topComment = comment?.snippet?.topLevelComment?.snippet;
+          if (!topComment) return null;
           return (
             <div className="comment" key={index}>
               <img src={topComment.authorProfileImageUrl || user_profile} alt="user" />
               <div>
-                <h3>{topComment.authorDisplayName} <span>{new Date(topComment.publishedAt).toDateString()}</span></h3>
-                <p>{topComment.textDisplay}</p>
+                <h3>{topComment.authorDisplayName || 'Anonymous'} <span>{topComment.publishedAt ? new Date(topComment.publishedAt).toDateString() : 'Unknown date'}</span></h3>
+                <p>{topComment.textDisplay || 'No comment text'}</p>
                 <div className="comment-action">
                   <img src={like} alt="like" />
                   <span>{topComment.likeCount}</span>

@@ -28,11 +28,11 @@ const Recommended = ({categoryId}) => {
         {apiData.map((item, index)=>{
             return(
             <Link to={`/video/${categoryId}/${item.id}`} key={index} className="side-video-list">
-             <img src={item?.snippet?.thumbnails?.medium?.url} alt="" />
+             <img src={item?.snippet?.thumbnails?.medium?.url || '/default-thumbnail.jpg'} alt="" />
                 <div className="vid-info">
-                    <h4>{item.snippet.title}</h4>
-                    <p>{item.snippet.channelTitle}</p>
-                    <p>{value_converter(item.statistics.viewCount)} views</p>
+                    <h4>{item?.snippet?.title || 'Untitled Video'}</h4>
+                    <p>{item?.snippet?.channelTitle || 'Unknown Channel'}</p>
+                    <p>{item?.statistics?.viewCount ? value_converter(item.statistics.viewCount) : '0'} views</p>
             </div>
             </Link>
             )

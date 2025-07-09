@@ -49,7 +49,7 @@ const mockChannelData = {
       }
     },
     statistics: {
-      subscriberCount: '2500000'
+      subscriberCount: '2000000'
     }
   }]
 }
