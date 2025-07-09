@@ -156,8 +156,16 @@ describe('Sidebar Component', () => {
     const images = container.querySelectorAll('img')
     expect(images).toHaveLength(14) // 9 category icons + 5 subscriber avatars
     
-    // All images should have empty alt attributes (decorative)
-    images.forEach(img => {
+    // Category images should have descriptive alt attributes for accessibility
+    const categoryImages = container.querySelectorAll('button img')
+    categoryImages.forEach(img => {
+      expect(img).toHaveAttribute('alt')
+      expect(img.getAttribute('alt')).not.toBe('')
+    })
+    
+    // Subscriber images should have empty alt attributes (decorative)
+    const subscriberImages = container.querySelectorAll('.subscribed-list img')
+    subscriberImages.forEach(img => {
       expect(img).toHaveAttribute('alt', '')
     })
   })

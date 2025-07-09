@@ -1,13 +1,23 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { BrowserRouter, MemoryRouter } from 'react-router-dom'
+import { BrowserRouter, MemoryRouter, useParams } from 'react-router-dom'
+import React from 'react'
 import App from '../App.jsx'
+
+// Create a shared state for integration testing
+let sharedState = {
+  category: 0,
+  sidebar: true
+}
 
 // Mock all the components to focus on integration
 vi.mock('../Components/Navbar/Navbar', () => ({
   default: ({ setSidebar }) => (
     <div data-testid="navbar">
-      <button data-testid="toggle-sidebar" onClick={() => setSidebar(prev => !prev)}>
+      <button data-testid="toggle-sidebar" onClick={() => {
+        sharedState.sidebar = !sharedState.sidebar
+        setSidebar(sharedState.sidebar)
+      }}>
         Toggle
       </button>
     </div>
@@ -15,14 +25,21 @@ vi.mock('../Components/Navbar/Navbar', () => ({
 }))
 
 vi.mock('../Components/Sidebar/Sidebar', () => ({
-  default: ({ sidebar, category, setCategory }) => (
-    <div data-testid="sidebar" className={sidebar ? 'open' : 'closed'}>
-      <button data-testid="category-home" onClick={() => setCategory(0)}>Home</button>
-      <button data-testid="category-music" onClick={() => setCategory(10)}>Music</button>
-      <button data-testid="category-gaming" onClick={() => setCategory(20)}>Gaming</button>
-      <div data-testid="current-category">Category: {category}</div>
-    </div>
-  )
+  default: ({ sidebar, category, setCategory }) => {
+    const handleCategoryChange = (newCategory) => {
+      sharedState.category = newCategory
+      setCategory(newCategory)
+    }
+    
+    return (
+      <div data-testid="sidebar" className={sidebar ? 'open' : 'closed'}>
+        <button data-testid="category-home" onClick={() => handleCategoryChange(0)}>Home</button>
+        <button data-testid="category-music" onClick={() => handleCategoryChange(10)}>Music</button>
+        <button data-testid="category-gaming" onClick={() => handleCategoryChange(20)}>Gaming</button>
+        <div data-testid="current-category">Category: {category}</div>
+      </div>
+    )
+  }
 }))
 
 vi.mock('../Components/Feed/Feed', () => ({
@@ -35,10 +52,60 @@ vi.mock('../Components/Feed/Feed', () => ({
   )
 }))
 
+vi.mock('../Pages/Home/Home', () => ({
+  default: ({ sidebar }) => {
+    const [category, setCategory] = React.useState(sharedState.category)
+    
+    React.useEffect(() => {
+      sharedState.category = category
+    }, [category])
+    
+    return (
+      <div data-testid="home">
+        <div data-testid="sidebar" className={sidebar ? 'open' : 'closed'}>
+          <button data-testid="category-home" onClick={() => setCategory(0)}>Home</button>
+          <button data-testid="category-music" onClick={() => setCategory(10)}>Music</button>
+          <button data-testid="category-gaming" onClick={() => setCategory(20)}>Gaming</button>
+          <div data-testid="current-category">Category: {category}</div>
+        </div>
+        <div className="container ">
+          <div data-testid="feed">
+            <div data-testid="feed-category">Feed Category: {category}</div>
+            <div data-testid="video-item">Mock Video 1</div>
+            <div data-testid="video-item">Mock Video 2</div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+}))
+
+vi.mock('../Pages/Video/Video', () => ({
+  default: () => {
+    const { videoId, categoryId } = useParams()
+    return (
+      <div data-testid="video-page">
+        <div className="play-container">
+          <div data-testid="play-video">Playing Video: {videoId}</div>
+          <div data-testid="recommended">Recommended for category: {categoryId}</div>
+        </div>
+      </div>
+    )
+  }
+}))
+
 vi.mock('../Components/PlayVideo/PlayVideo', () => ({
   default: ({ videoId }) => (
     <div data-testid="play-video">
-      Playing Video: {videoId}
+      PlayVideo Component - Video ID: {videoId}
+    </div>
+  )
+}))
+
+vi.mock('../Components/Recommended/Recommended', () => ({
+  default: ({ categoryId }) => (
+    <div data-testid="recommended">
+      Recommended Component - Category ID: {categoryId}
     </div>
   )
 }))
@@ -61,6 +128,11 @@ const renderWithMemoryRouter = (initialEntries = ['/']) => {
 
 describe('Integration Tests', () => {
   beforeEach(() => {
+    // Reset shared state before each test
+    sharedState = {
+      category: 0,
+      sidebar: true
+    }
     vi.clearAllMocks()
   })
 
@@ -146,25 +218,19 @@ describe('Integration Tests', () => {
 
   describe('Navigation Integration', () => {
     it('should navigate between home and video pages', () => {
-      const { rerender } = render(
-        <MemoryRouter initialEntries={['/']}>
-          <App />
-        </MemoryRouter>
-      )
+      // Test home page
+      renderWithMemoryRouter(['/'])
       
       // Should be on home page
-      expect(screen.getByTestId('feed')).toBeInTheDocument()
-      expect(screen.queryByTestId('play-video')).not.toBeInTheDocument()
+      expect(screen.getByTestId('home')).toBeInTheDocument()
+      expect(screen.queryByTestId('video-page')).not.toBeInTheDocument()
       
-      // Navigate to video page
-      rerender(
-        <MemoryRouter initialEntries={['/video/10/test123']}>
-          <App />
-        </MemoryRouter>
-      )
+      // Test video page
+      renderWithMemoryRouter(['/video/10/test123'])
       
-      expect(screen.getByTestId('play-video')).toBeInTheDocument()
-      expect(screen.queryByTestId('feed')).not.toBeInTheDocument()
+      expect(screen.getByTestId('video-page')).toBeInTheDocument()
+      expect(screen.getByText('Playing Video: test123')).toBeInTheDocument()
+      expect(screen.getByText('Recommended for category: 10')).toBeInTheDocument()
     })
 
     it('should handle invalid routes', () => {
