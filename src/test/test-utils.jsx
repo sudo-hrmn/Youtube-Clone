@@ -8,7 +8,7 @@ import { BrowserRouter, MemoryRouter } from 'react-router-dom'
  * @returns {Object} - Render result
  */
 export const renderWithRouter = (ui, options = {}) => {
-  const { initialEntries = ['/'], ...renderOptions } = options
+  const { initialEntries: _initialEntries = ['/'], ...renderOptions } = options
   
   const Wrapper = ({ children }) => (
     <BrowserRouter>

@@ -15,7 +15,7 @@ vi.mock('../data', () => ({
 
 // Mock moment
 vi.mock('moment/moment', () => ({
-  default: vi.fn((date) => ({
+  default: vi.fn((_date) => ({
     fromNow: () => '2 days ago'
   }))
 }))
