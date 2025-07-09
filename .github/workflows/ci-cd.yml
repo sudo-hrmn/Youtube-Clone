@@ -43,10 +43,25 @@ jobs:
         run: npm audit --audit-level=high
 
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
+        if: ${{ secrets.SONAR_TOKEN != '' }}
+        uses: SonarSource/sonarqube-scan-action@v5.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: .
+          args: >
+            -Dsonar.projectKey=sudo-hrmn_Youtube-Clone
+            -Dsonar.organization=sudo-hrmn
+
+      - name: SonarCloud Scan Status
+        if: ${{ secrets.SONAR_TOKEN == '' }}
+        run: |
+          echo "⚠️ SonarCloud scan skipped - SONAR_TOKEN not configured"
+          echo "To enable SonarCloud analysis:"
+          echo "1. Go to https://sonarcloud.io"
+          echo "2. Import your repository: sudo-hrmn/Youtube-Clone"
+          echo "3. Get project token and add to GitHub Secrets as SONAR_TOKEN"
 
   # Unit and Integration Tests
   test:
