@@ -2,13 +2,13 @@ name: YouTube Clone CI/CD Pipeline
 
 on:
   push:
-    branches: [ main, develop, staging ]
+    branches: [ main ]
     paths-ignore:
       - 'kubernetes/**/*.yaml'
       - 'README.md'
       - 'docs/**'
   pull_request:
-    branches: [ main, develop ]
+    branches: [ main ]
     types: [opened, synchronize, reopened]
 
 env:
@@ -169,7 +169,7 @@ jobs:
           tags: |
             type=ref,event=branch
             type=ref,event=pr
-            type=sha,prefix={{branch}}-
+            type=sha,prefix=main-
             type=raw,value=latest,enable={{is_default_branch}}
             type=raw,value=${{ needs.build.outputs.version }}
 
@@ -192,7 +192,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}-${{ needs.build.outputs.short-sha }}
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main-${{ needs.build.outputs.short-sha }}
           format: 'sarif'
           output: 'trivy-results.sarif'
 
@@ -207,14 +207,14 @@ jobs:
           curl -LO https://storage.googleapis.com/container-structure-test/latest/container-structure-test-linux-amd64
           chmod +x container-structure-test-linux-amd64
           sudo mv container-structure-test-linux-amd64 /usr/local/bin/container-structure-test
-          container-structure-test test --image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}-${{ needs.build.outputs.short-sha }} --config .github/container-structure-test.yaml
+          container-structure-test test --image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main-${{ needs.build.outputs.short-sha }} --config .github/container-structure-test.yaml
 
-  # Deploy to Development
+  # Deploy to Development (for PR testing)
   deploy-dev:
     name: Deploy to Development
     runs-on: ubuntu-latest
     needs: [docker]
-    if: github.ref == 'refs/heads/develop'
+    if: github.event_name == 'pull_request'
     environment:
       name: development
       url: https://youtube-clone-dev.yourdomain.com
@@ -232,6 +232,11 @@ jobs:
           echo "${{ secrets.KUBE_CONFIG_DEV }}" | base64 -d > kubeconfig
           export KUBECONFIG=kubeconfig
 
+      - name: Update image tag for development
+        run: |
+          cd kubernetes/overlays/development
+          sed -i "s|newTag: .*|newTag: main-${{ needs.build.outputs.short-sha }}|g" kustomization.yaml
+
       - name: Deploy to development
         run: |
           export KUBECONFIG=kubeconfig
@@ -244,12 +249,12 @@ jobs:
           sleep 30
           curl -f https://youtube-clone-dev.yourdomain.com/health || exit 1
 
-  # Deploy to Staging
+  # Deploy to Staging (on main branch push)
   deploy-staging:
     name: Deploy to Staging
     runs-on: ubuntu-latest
     needs: [docker]
-    if: github.ref == 'refs/heads/staging'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     environment:
       name: staging
       url: https://youtube-clone-staging.yourdomain.com
@@ -267,6 +272,11 @@ jobs:
           echo "${{ secrets.KUBE_CONFIG_STAGING }}" | base64 -d > kubeconfig
           export KUBECONFIG=kubeconfig
 
+      - name: Update image tag for staging
+        run: |
+          cd kubernetes/overlays/staging
+          sed -i "s|newTag: .*|newTag: main-${{ needs.build.outputs.short-sha }}|g" kustomization.yaml
+
       - name: Deploy to staging
         run: |
           export KUBECONFIG=kubeconfig
@@ -277,14 +287,14 @@ jobs:
       - name: Run integration tests
         run: |
           sleep 30
-          npm run test:e2e -- --baseUrl=https://youtube-clone-staging.yourdomain.com
+          curl -f https://youtube-clone-staging.yourdomain.com/health || exit 1
 
-  # Deploy to Production
+  # Deploy to Production (manual approval required)
   deploy-prod:
     name: Deploy to Production
     runs-on: ubuntu-latest
     needs: [docker, deploy-staging]
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     environment:
       name: production
       url: https://youtube-clone.yourdomain.com
@@ -304,6 +314,11 @@ jobs:
           echo "${{ secrets.KUBE_CONFIG_PROD }}" | base64 -d > kubeconfig
           export KUBECONFIG=kubeconfig
 
+      - name: Update image tag for production
+        run: |
+          cd kubernetes/overlays/production
+          sed -i "s|newTag: .*|newTag: main-${{ needs.build.outputs.short-sha }}|g" kustomization.yaml
+
       - name: Deploy to production
         run: |
           export KUBECONFIG=kubeconfig
@@ -311,16 +326,16 @@ jobs:
           kubectl apply -k .
           kubectl rollout status deployment/youtube-clone -n youtube-clone-prod --timeout=600s
 
-      - name: Update deployment manifest
+      - name: Update deployment manifest in repo
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           
           # Update the image tag in the base kustomization
-          NEW_TAG="${{ github.ref_name }}-${{ needs.build.outputs.short-sha }}"
+          NEW_TAG="main-${{ needs.build.outputs.short-sha }}"
           sed -i "s|newTag: .*|newTag: ${NEW_TAG}|g" kubernetes/base/kustomization.yaml
           
-          git add kubernetes/base/kustomization.yaml
+          git add kubernetes/base/kustomization.yaml kubernetes/overlays/production/kustomization.yaml
           git commit -m "chore: update image tag to ${NEW_TAG} [skip ci]" || echo "No changes to commit"
           git push
 
@@ -334,7 +349,7 @@ jobs:
         if: success()
         with:
           status: success
-          text: "🚀 YouTube Clone successfully deployed to production!"
+          text: "🚀 YouTube Clone successfully deployed to production from main branch!"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 

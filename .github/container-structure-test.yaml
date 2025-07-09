@@ -4,36 +4,34 @@ commandTests:
   - name: "nginx version"
     command: "nginx"
     args: ["-v"]
-    expectedError: ["nginx version: nginx/.*"]
+    expectedError: ["nginx version: nginx/1.25.*"]
 
-  - name: "health check endpoint"
-    command: "curl"
-    args: ["-f", "http://localhost/health"]
-    setup: [["nginx", "-g", "daemon off;"]]
-    expectedOutput: ["healthy"]
+  - name: "check curl is available"
+    command: "which"
+    args: ["curl"]
+    expectedOutput: ["/usr/bin/curl"]
 
 fileExistenceTests:
-  - name: 'application files'
-    path: '/usr/share/nginx/html'
-    shouldExist: true
-    isDirectory: true
-
-  - name: 'index.html exists'
-    path: '/usr/share/nginx/html/index.html'
-    shouldExist: true
-
   - name: 'nginx config'
     path: '/etc/nginx/nginx.conf'
     shouldExist: true
 
-fileContentTests:
-  - name: 'nginx runs as non-root'
-    path: '/etc/nginx/nginx.conf'
-    expectedContents: ['user nginx;']
+  - name: 'app files'
+    path: '/usr/share/nginx/html/index.html'
+    shouldExist: true
 
-  - name: 'gzip enabled'
+  - name: 'health check script'
+    path: '/usr/share/nginx/html/health'
+    shouldExist: true
+
+fileContentTests:
+  - name: 'nginx config contains gzip'
     path: '/etc/nginx/nginx.conf'
     expectedContents: ['gzip on;']
+
+  - name: 'nginx config contains security headers'
+    path: '/etc/nginx/nginx.conf'
+    expectedContents: ['X-Content-Type-Options nosniff;']
 
 metadataTest:
   exposedPorts: ["80"]

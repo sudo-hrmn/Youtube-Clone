@@ -27,7 +27,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies with security optimizations
-RUN npm ci --only=production --no-audit --no-fund && \
+RUN npm ci --no-audit --no-fund && \
     npm cache clean --force
 
 # Copy source code
@@ -47,14 +47,18 @@ RUN apk update && apk upgrade && \
     tzdata && \
     rm -rf /var/cache/apk/*
 
-# Create non-root user
-RUN addgroup -g 1001 -S nginx && \
-    adduser -S -D -H -u 1001 -h /var/cache/nginx -s /sbin/nologin -G nginx -g nginx nginx
+# Create non-root user (check if user exists first)
+RUN if ! getent group nginx > /dev/null 2>&1; then \
+        addgroup -g 1001 -S nginx; \
+    fi && \
+    if ! getent passwd nginx > /dev/null 2>&1; then \
+        adduser -S -D -H -u 1001 -h /var/cache/nginx -s /sbin/nologin -G nginx -g nginx nginx; \
+    fi
 
 # Create necessary directories with proper permissions
-RUN mkdir -p /var/cache/nginx /var/run /var/log/nginx && \
-    chown -R nginx:nginx /var/cache/nginx /var/run /var/log/nginx && \
-    chmod -R 755 /var/cache/nginx /var/run
+RUN mkdir -p /var/cache/nginx /var/run /var/log/nginx /tmp/client_temp /tmp/proxy_temp_path /tmp/fastcgi_temp /tmp/uwsgi_temp /tmp/scgi_temp && \
+    chown -R nginx:nginx /var/cache/nginx /var/run /var/log/nginx /tmp/client_temp /tmp/proxy_temp_path /tmp/fastcgi_temp /tmp/uwsgi_temp /tmp/scgi_temp && \
+    chmod -R 755 /var/cache/nginx /var/run /tmp/client_temp /tmp/proxy_temp_path /tmp/fastcgi_temp /tmp/uwsgi_temp /tmp/scgi_temp
 
 # Copy custom nginx configuration
 COPY nginx.conf /etc/nginx/nginx.conf
