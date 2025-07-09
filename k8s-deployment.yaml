@@ -1,0 +1,241 @@
+# YouTube Clone V1 - Kubernetes Deployment Configuration
+# Professional-grade deployment with ingress, services, and monitoring
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: youtube-clone-v1
+  labels:
+    app: youtube-clone
+    version: v1
+    environment: development
+---
+# ConfigMap for application configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: youtube-clone-config
+  namespace: youtube-clone-v1
+  labels:
+    app: youtube-clone
+    version: v1
+data:
+  NODE_ENV: "production"
+  PORT: "80"
+  API_BASE_URL: "https://www.googleapis.com/youtube/v3"
+---
+# Secret for API keys (placeholder - replace with actual values)
+apiVersion: v1
+kind: Secret
+metadata:
+  name: youtube-clone-secrets
+  namespace: youtube-clone-v1
+  labels:
+    app: youtube-clone
+    version: v1
+type: Opaque
+data:
+  # Base64 encoded API key (replace with actual key)
+  YOUTUBE_API_KEY: eW91ci1hcGkta2V5LWhlcmU=
+---
+# Deployment for YouTube Clone application
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: youtube-clone-deployment
+  namespace: youtube-clone-v1
+  labels:
+    app: youtube-clone
+    version: v1
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: youtube-clone
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: youtube-clone
+        version: v1
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "80"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+      - name: youtube-clone
+        image: youtube-clone:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        env:
+        - name: NODE_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: youtube-clone-config
+              key: NODE_ENV
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              name: youtube-clone-config
+              key: PORT
+        - name: API_BASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: youtube-clone-config
+              key: API_BASE_URL
+        - name: YOUTUBE_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: youtube-clone-secrets
+              key: YOUTUBE_API_KEY
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsNonRoot: true
+          runAsUser: 1000
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+      securityContext:
+        fsGroup: 1000
+      restartPolicy: Always
+---
+# Service for YouTube Clone application
+apiVersion: v1
+kind: Service
+metadata:
+  name: youtube-clone-service
+  namespace: youtube-clone-v1
+  labels:
+    app: youtube-clone
+    version: v1
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    name: http
+  selector:
+    app: youtube-clone
+    version: v1
+---
+# NodePort Service for external access
+apiVersion: v1
+kind: Service
+metadata:
+  name: youtube-clone-nodeport
+  namespace: youtube-clone-v1
+  labels:
+    app: youtube-clone
+    version: v1
+    service-type: nodeport
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30000
+    protocol: TCP
+    name: http
+  selector:
+    app: youtube-clone
+    version: v1
+---
+# Horizontal Pod Autoscaler
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: youtube-clone-hpa
+  namespace: youtube-clone-v1
+  labels:
+    app: youtube-clone
+    version: v1
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: youtube-clone-deployment
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+---
+# Ingress for external access (requires ingress controller)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: youtube-clone-ingress
+  namespace: youtube-clone-v1
+  labels:
+    app: youtube-clone
+    version: v1
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: youtube-clone.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: youtube-clone-service
+            port:
+              number: 80
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: youtube-clone-service
+            port:
+              number: 80
