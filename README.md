@@ -1,6 +1,6 @@
 # YouTube Clone - Docker Deployment
 
-A React-based YouTube clone application containerized with Docker using multi-stage builds for optimal production deployment.
+A React-based YouTube clone application containerized with Docker using multi-stage builds for production deployment.
 
 ## 🏗️ Architecture
 
@@ -21,6 +21,7 @@ youtube-clone/
 │   ├── App.jsx            # Main App component
 │   └── main.jsx           # Entry point
 ├── public/                # Public assets
+├── kubernetes/            # Kubernetes manifests
 ├── Dockerfile             # Multi-stage Docker configuration
 ├── docker-compose.yml     # Docker Compose configuration
 ├── nginx.conf             # Nginx configuration for production
@@ -43,10 +44,10 @@ youtube-clone/
 docker build -t youtube-clone:latest --target production .
 
 # Run the container
-docker run -d -p 80:80 --name youtube-clone-app youtube-clone:latest
+docker run -d -p 8080:8080 --name youtube-clone-app youtube-clone:latest
 
 # Access the application
-open http://localhost:80
+open http://localhost:8080
 ```
 
 #### Run Development Mode
@@ -69,7 +70,7 @@ open http://localhost:5173
 docker-compose up -d youtube-clone-prod
 
 # Access the application
-open http://localhost:80
+open http://localhost:8080
 ```
 
 #### Development Mode
@@ -109,7 +110,7 @@ make health
 make shell
 ```
 
-## 🐳 Docker Configuration Details
+## 🐳 Docker Configuration
 
 ### Multi-Stage Dockerfile Benefits
 
@@ -158,7 +159,7 @@ make shell
 ```bash
 # Check container health
 docker ps
-curl http://localhost:80/health
+curl http://localhost:8080/
 
 # View detailed health status
 docker inspect youtube-clone-app | grep -A 10 Health
@@ -191,11 +192,11 @@ docker top youtube-clone-app
 
 1. **Port Already in Use**
    ```bash
-   # Check what's using port 80
-   sudo lsof -i :80
+   # Check what's using port 8080
+   sudo lsof -i :8080
    
    # Use different port
-   docker run -d -p 8080:80 --name youtube-clone-app youtube-clone:latest
+   docker run -d -p 8081:8080 --name youtube-clone-app youtube-clone:latest
    ```
 
 2. **Build Failures**
