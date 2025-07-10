@@ -70,8 +70,8 @@ jobs:
       
     - name: Test Docker image
       run: |
-        docker run -d -p 8080:80 --name test-container youtube-clone:test
-        sleep 10
+        docker run -d -p 8080:8080 --name test-container youtube-clone:test
+        sleep 15
         curl -f http://localhost:8080 || exit 1
         docker stop test-container
         docker rm test-container

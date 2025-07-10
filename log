@@ -1,282 +1,594 @@
-2025-07-10T05:20:59.7557843Z Current runner version: '2.325.0'
-2025-07-10T05:20:59.7581558Z ##[group]Runner Image Provisioner
-2025-07-10T05:20:59.7582457Z Hosted Compute Agent
-2025-07-10T05:20:59.7583024Z Version: 20250620.352
-2025-07-10T05:20:59.7583583Z Commit: f262f3aba23b10ea191b2a62bdee1ca4c3d344da
-2025-07-10T05:20:59.7584353Z Build Date: 2025-06-20T19:27:17Z
-2025-07-10T05:20:59.7585273Z ##[endgroup]
-2025-07-10T05:20:59.7585834Z ##[group]Operating System
-2025-07-10T05:20:59.7586485Z Ubuntu
-2025-07-10T05:20:59.7586927Z 24.04.2
-2025-07-10T05:20:59.7587389Z LTS
-2025-07-10T05:20:59.7587832Z ##[endgroup]
-2025-07-10T05:20:59.7588329Z ##[group]Runner Image
-2025-07-10T05:20:59.7588851Z Image: ubuntu-24.04
-2025-07-10T05:20:59.7589377Z Version: 20250629.1.0
-2025-07-10T05:20:59.7590370Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20250629.1/images/ubuntu/Ubuntu2404-Readme.md
-2025-07-10T05:20:59.7591957Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20250629.1
-2025-07-10T05:20:59.7592954Z ##[endgroup]
-2025-07-10T05:20:59.7594080Z ##[group]GITHUB_TOKEN Permissions
-2025-07-10T05:20:59.7596419Z Contents: read
-2025-07-10T05:20:59.7596965Z Metadata: read
-2025-07-10T05:20:59.7597482Z Packages: read
-2025-07-10T05:20:59.7597987Z ##[endgroup]
-2025-07-10T05:20:59.7599917Z Secret source: Actions
-2025-07-10T05:20:59.7601063Z Prepare workflow directory
-2025-07-10T05:20:59.7937873Z Prepare all required actions
-2025-07-10T05:20:59.7977687Z Getting action download info
-2025-07-10T05:21:00.1731753Z ##[group]Download immutable action package 'actions/checkout@v4'
-2025-07-10T05:21:00.1732760Z Version: 4.2.2
-2025-07-10T05:21:00.1733822Z Digest: sha256:ccb2698953eaebd21c7bf6268a94f9c26518a7e38e27e0b83c1fe1ad049819b1
-2025-07-10T05:21:00.1735296Z Source commit SHA: 11bd71901bbe5b1630ceea73d27597364c9af683
-2025-07-10T05:21:00.1735989Z ##[endgroup]
-2025-07-10T05:21:00.2551772Z ##[group]Download immutable action package 'actions/setup-node@v4'
-2025-07-10T05:21:00.2552642Z Version: 4.4.0
-2025-07-10T05:21:00.2553423Z Digest: sha256:9427cefe82346e992fb5b949e3569b39d537ae41aa3086483b14eceebfc16bc1
-2025-07-10T05:21:00.2554311Z Source commit SHA: 49933ea5288caeca8642d1e84afbd3f7d6820020
-2025-07-10T05:21:00.2555337Z ##[endgroup]
-2025-07-10T05:21:00.3488541Z Download action repository 'codecov/codecov-action@v3' (SHA:ab904c41d6ece82784817410c45d8b8c02684457)
-2025-07-10T05:21:00.7221260Z ##[group]Download immutable action package 'actions/upload-artifact@v4'
-2025-07-10T05:21:00.7222176Z Version: 4.6.2
-2025-07-10T05:21:00.7222872Z Digest: sha256:290722aa3281d5caf23d0acdc3dbeb3424786a1a01a9cc97e72f147225e37c38
-2025-07-10T05:21:00.7223815Z Source commit SHA: ea165f8d65b6e75b540449e92b4886f43607fa02
-2025-07-10T05:21:00.7224510Z ##[endgroup]
-2025-07-10T05:21:00.9291235Z Complete job name: test (22.x)
-2025-07-10T05:21:00.9891650Z ##[group]Run actions/checkout@v4
-2025-07-10T05:21:00.9892450Z with:
-2025-07-10T05:21:00.9892852Z   repository: sudo-hrmn/Youtube-Clone
-2025-07-10T05:21:00.9893480Z   token: ***
-2025-07-10T05:21:00.9893871Z   ssh-strict: true
-2025-07-10T05:21:00.9894243Z   ssh-user: git
-2025-07-10T05:21:00.9894791Z   persist-credentials: true
-2025-07-10T05:21:00.9895226Z   clean: true
-2025-07-10T05:21:00.9895610Z   sparse-checkout-cone-mode: true
-2025-07-10T05:21:00.9896079Z   fetch-depth: 1
-2025-07-10T05:21:00.9896444Z   fetch-tags: false
-2025-07-10T05:21:00.9896826Z   show-progress: true
-2025-07-10T05:21:00.9897197Z   lfs: false
-2025-07-10T05:21:00.9897545Z   submodules: false
-2025-07-10T05:21:00.9897926Z   set-safe-directory: true
-2025-07-10T05:21:00.9898594Z ##[endgroup]
-2025-07-10T05:21:01.0988793Z Syncing repository: sudo-hrmn/Youtube-Clone
-2025-07-10T05:21:01.0991470Z ##[group]Getting Git version info
-2025-07-10T05:21:01.0992833Z Working directory is '/home/runner/work/Youtube-Clone/Youtube-Clone'
-2025-07-10T05:21:01.0994807Z [command]/usr/bin/git version
-2025-07-10T05:21:01.1015003Z git version 2.49.0
-2025-07-10T05:21:01.1041113Z ##[endgroup]
-2025-07-10T05:21:01.1054513Z Temporarily overriding HOME='/home/runner/work/_temp/7de2c96c-563a-485f-a436-90de9a6d64c6' before making global git config changes
-2025-07-10T05:21:01.1056418Z Adding repository directory to the temporary git global config as a safe directory
-2025-07-10T05:21:01.1060004Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Youtube-Clone/Youtube-Clone
-2025-07-10T05:21:01.1092065Z Deleting the contents of '/home/runner/work/Youtube-Clone/Youtube-Clone'
-2025-07-10T05:21:01.1095469Z ##[group]Initializing the repository
-2025-07-10T05:21:01.1099432Z [command]/usr/bin/git init /home/runner/work/Youtube-Clone/Youtube-Clone
-2025-07-10T05:21:01.1159270Z hint: Using 'master' as the name for the initial branch. This default branch name
-2025-07-10T05:21:01.1160480Z hint: is subject to change. To configure the initial branch name to use in all
-2025-07-10T05:21:01.1161477Z hint: of your new repositories, which will suppress this warning, call:
-2025-07-10T05:21:01.1162616Z hint:
-2025-07-10T05:21:01.1163089Z hint: 	git config --global init.defaultBranch <name>
-2025-07-10T05:21:01.1164053Z hint:
-2025-07-10T05:21:01.1165243Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
-2025-07-10T05:21:01.1166887Z hint: 'development'. The just-created branch can be renamed via this command:
-2025-07-10T05:21:01.1168202Z hint:
-2025-07-10T05:21:01.1168896Z hint: 	git branch -m <name>
-2025-07-10T05:21:01.1170248Z Initialized empty Git repository in /home/runner/work/Youtube-Clone/Youtube-Clone/.git/
-2025-07-10T05:21:01.1176091Z [command]/usr/bin/git remote add origin https://github.com/sudo-hrmn/Youtube-Clone
-2025-07-10T05:21:01.1207538Z ##[endgroup]
-2025-07-10T05:21:01.1208217Z ##[group]Disabling automatic garbage collection
-2025-07-10T05:21:01.1211402Z [command]/usr/bin/git config --local gc.auto 0
-2025-07-10T05:21:01.1239166Z ##[endgroup]
-2025-07-10T05:21:01.1239782Z ##[group]Setting up auth
-2025-07-10T05:21:01.1245823Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
-2025-07-10T05:21:01.1274445Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
-2025-07-10T05:21:01.1531635Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
-2025-07-10T05:21:01.1559836Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
-2025-07-10T05:21:01.1777664Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
-2025-07-10T05:21:01.1819179Z ##[endgroup]
-2025-07-10T05:21:01.1827309Z ##[group]Fetching the repository
-2025-07-10T05:21:01.1830294Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +dd2355fc74a1ed219f3661fc64ddf02ae044e1b1:refs/remotes/origin/main
-2025-07-10T05:21:01.6471595Z From https://github.com/sudo-hrmn/Youtube-Clone
-2025-07-10T05:21:01.6472740Z  * [new ref]         dd2355fc74a1ed219f3661fc64ddf02ae044e1b1 -> origin/main
-2025-07-10T05:21:01.6516356Z ##[endgroup]
-2025-07-10T05:21:01.6517268Z ##[group]Determining the checkout info
-2025-07-10T05:21:01.6519983Z ##[endgroup]
-2025-07-10T05:21:01.6527069Z [command]/usr/bin/git sparse-checkout disable
-2025-07-10T05:21:01.6569007Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
-2025-07-10T05:21:01.6599440Z ##[group]Checking out the ref
-2025-07-10T05:21:01.6604542Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
-2025-07-10T05:21:01.6840594Z Switched to a new branch 'main'
-2025-07-10T05:21:01.6842825Z branch 'main' set up to track 'origin/main'.
-2025-07-10T05:21:01.6849911Z ##[endgroup]
-2025-07-10T05:21:01.6888800Z [command]/usr/bin/git log -1 --format=%H
-2025-07-10T05:21:01.6910258Z dd2355fc74a1ed219f3661fc64ddf02ae044e1b1
-2025-07-10T05:21:01.7249371Z ##[group]Run actions/setup-node@v4
-2025-07-10T05:21:01.7251426Z with:
-2025-07-10T05:21:01.7252688Z   node-version: 22.x
-2025-07-10T05:21:01.7254107Z   cache: npm
-2025-07-10T05:21:01.7255677Z   always-auth: false
-2025-07-10T05:21:01.7257140Z   check-latest: false
-2025-07-10T05:21:01.7258996Z   token: ***
-2025-07-10T05:21:01.7260318Z ##[endgroup]
-2025-07-10T05:21:01.9312357Z Found in cache @ /opt/hostedtoolcache/node/22.17.0/x64
-2025-07-10T05:21:01.9318674Z ##[group]Environment details
-2025-07-10T05:21:04.3981645Z node: v22.17.0
-2025-07-10T05:21:04.3983067Z npm: 10.9.2
-2025-07-10T05:21:04.3983415Z yarn: 1.22.22
-2025-07-10T05:21:04.3986297Z ##[endgroup]
-2025-07-10T05:21:04.4003226Z [command]/opt/hostedtoolcache/node/22.17.0/x64/bin/npm config get cache
-2025-07-10T05:21:04.6599310Z /home/runner/.npm
-2025-07-10T05:21:04.7955416Z Cache hit for: node-cache-Linux-x64-npm-807a322cd21f784901d259e50cbe9bfa639a9d42d26df5257574ad6c68b6d0f6
-2025-07-10T05:21:05.4341696Z Received 21132001 of 21132001 (100.0%), 39.6 MBs/sec
-2025-07-10T05:21:05.4342406Z Cache Size: ~20 MB (21132001 B)
-2025-07-10T05:21:05.4374241Z [command]/usr/bin/tar -xf /home/runner/work/_temp/12f97dd5-57c1-4fb1-8b74-ec54a29788b2/cache.tzst -P -C /home/runner/work/Youtube-Clone/Youtube-Clone --use-compress-program unzstd
-2025-07-10T05:21:05.5242701Z Cache restored successfully
-2025-07-10T05:21:05.5289382Z Cache restored from key: node-cache-Linux-x64-npm-807a322cd21f784901d259e50cbe9bfa639a9d42d26df5257574ad6c68b6d0f6
-2025-07-10T05:21:05.5502978Z ##[group]Run npm ci
-2025-07-10T05:21:05.5503270Z [36;1mnpm ci[0m
-2025-07-10T05:21:05.5602633Z shell: /usr/bin/bash -e {0}
-2025-07-10T05:21:05.5602919Z ##[endgroup]
-2025-07-10T05:21:09.5191582Z 
-2025-07-10T05:21:09.5200355Z added 296 packages, and audited 297 packages in 4s
-2025-07-10T05:21:09.5200864Z 
-2025-07-10T05:21:09.5201196Z 65 packages are looking for funding
-2025-07-10T05:21:09.5201680Z   run `npm fund` for details
-2025-07-10T05:21:09.5205773Z 
-2025-07-10T05:21:09.5206186Z found 0 vulnerabilities
-2025-07-10T05:21:09.5779511Z ##[group]Run npm run lint
-2025-07-10T05:21:09.5779802Z [36;1mnpm run lint[0m
-2025-07-10T05:21:09.5839925Z shell: /usr/bin/bash -e {0}
-2025-07-10T05:21:09.5840171Z ##[endgroup]
-2025-07-10T05:21:09.6883623Z 
-2025-07-10T05:21:09.6884320Z > youtube-clone@0.0.0 lint
-2025-07-10T05:21:09.6885084Z > eslint .
-2025-07-10T05:21:09.6885251Z 
-2025-07-10T05:21:10.4229312Z ##[group]Run npm run test:run
-2025-07-10T05:21:10.4229611Z [36;1mnpm run test:run[0m
-2025-07-10T05:21:10.4287888Z shell: /usr/bin/bash -e {0}
-2025-07-10T05:21:10.4288133Z ##[endgroup]
-2025-07-10T05:21:10.5238301Z 
-2025-07-10T05:21:10.5238806Z > youtube-clone@0.0.0 test:run
-2025-07-10T05:21:10.5239154Z > vitest run
-2025-07-10T05:21:10.5239303Z 
-2025-07-10T05:21:10.9937181Z 
-2025-07-10T05:21:10.9939581Z [1m[46m RUN [49m[22m [36mv3.2.4 [39m[90m/home/runner/work/Youtube-Clone/Youtube-Clone[39m
-2025-07-10T05:21:10.9940098Z 
-2025-07-10T05:21:12.4002842Z [90mstderr[2m | src/test/integration.test.jsx[2m > [22m[2mIntegration Tests[2m > [22m[2mNavigation Integration[2m > [22m[2mshould handle invalid routes
-2025-07-10T05:21:12.4007105Z [22m[39mNo routes matched location "/invalid-route" 
-2025-07-10T05:21:12.4009938Z 
-2025-07-10T05:21:12.4429811Z [90mstderr[2m | src/test/integration.test.jsx[2m > [22m[2mIntegration Tests[2m > [22m[2mError Boundaries and Edge Cases[2m > [22m[2mshould handle route parameter edge cases
-2025-07-10T05:21:12.4433140Z [22m[39mNo routes matched location "/video//test" 
-2025-07-10T05:21:12.4435477Z No routes matched location "/video/10/" 
-2025-07-10T05:21:12.4437126Z 
-2025-07-10T05:21:12.4447634Z  [32m✓[39m src/test/integration.test.jsx [2m([22m[2m15 tests[22m[2m)[22m[32m 144[2mms[22m[39m
-2025-07-10T05:21:12.6547099Z  [32m✓[39m src/test/performance.test.jsx [2m([22m[2m13 tests[22m[2m)[22m[33m 395[2mms[22m[39m
-2025-07-10T05:21:12.9573036Z  [32m✓[39m src/test/PlayVideo.test.jsx [2m([22m[2m12 tests[22m[2m)[22m[33m 631[2mms[22m[39m
-2025-07-10T05:21:12.9577311Z    [33m[2m✓[22m[39m PlayVideo Component[2m > [22mshould fetch and display video details [33m 311[2mms[22m[39m
-2025-07-10T05:21:13.7574210Z  [32m✓[39m src/test/Recommended.test.jsx [2m([22m[2m15 tests[22m[2m)[22m[32m 250[2mms[22m[39m
-2025-07-10T05:21:14.1114414Z  [32m✓[39m src/test/Sidebar.test.jsx [2m([22m[2m12 tests[22m[2m)[22m[32m 288[2mms[22m[39m
-2025-07-10T05:21:14.5632729Z  [32m✓[39m src/test/Feed.test.jsx [2m([22m[2m10 tests[22m[2m)[22m[33m 351[2mms[22m[39m
-2025-07-10T05:21:15.0032471Z  [32m✓[39m src/test/Video.test.jsx [2m([22m[2m10 tests[22m[2m)[22m[32m 88[2mms[22m[39m
-2025-07-10T05:21:15.3443250Z  [32m✓[39m src/test/Navbar.test.jsx [2m([22m[2m6 tests[22m[2m)[22m[32m 144[2mms[22m[39m
-2025-07-10T05:21:15.8687444Z  [32m✓[39m src/test/state-management.test.jsx [2m([22m[2m4 tests[22m[2m)[22m[32m 71[2mms[22m[39m
-2025-07-10T05:21:16.2176443Z  [32m✓[39m src/test/Home.test.jsx [2m([22m[2m7 tests[22m[2m)[22m[32m 45[2mms[22m[39m
-2025-07-10T05:21:16.6047219Z [90mstderr[2m | src/test/routing.test.jsx[2m > [22m[2mRouting Integration[2m > [22m[2mshould handle invalid routes gracefully
-2025-07-10T05:21:16.6048625Z [22m[39mNo routes matched location "/invalid-route" 
-2025-07-10T05:21:16.6049041Z 
-2025-07-10T05:21:16.6081922Z  [32m✓[39m src/test/routing.test.jsx [2m([22m[2m4 tests[22m[2m)[22m[32m 74[2mms[22m[39m
-2025-07-10T05:21:17.0633092Z  [32m✓[39m src/test/App.test.jsx [2m([22m[2m4 tests[22m[2m)[22m[32m 55[2mms[22m[39m
-2025-07-10T05:21:17.2498627Z  [32m✓[39m src/test/data.test.js [2m([22m[2m6 tests[22m[2m)[22m[32m 4[2mms[22m[39m
-2025-07-10T05:21:17.2672317Z 
-2025-07-10T05:21:17.2678250Z [2m Test Files [22m [1m[32m13 passed[39m[22m[90m (13)[39m
-2025-07-10T05:21:17.2680203Z [2m      Tests [22m [1m[32m118 passed[39m[22m[90m (118)[39m
-2025-07-10T05:21:17.2681096Z [2m   Start at [22m 05:21:10
-2025-07-10T05:21:17.2683389Z [2m   Duration [22m 6.27s[2m (transform 632ms, setup 1.63s, collect 2.46s, tests 2.54s, environment 7.25s, prepare 1.60s)[22m
-2025-07-10T05:21:17.2687615Z 
-2025-07-10T05:21:17.4085889Z ##[group]Run npm run test:coverage
-2025-07-10T05:21:17.4086194Z [36;1mnpm run test:coverage[0m
-2025-07-10T05:21:17.4144420Z shell: /usr/bin/bash -e {0}
-2025-07-10T05:21:17.4144917Z ##[endgroup]
-2025-07-10T05:21:17.5200621Z 
-2025-07-10T05:21:17.5200997Z > youtube-clone@0.0.0 test:coverage
-2025-07-10T05:21:17.5201585Z > vitest run --coverage
-2025-07-10T05:21:17.5201830Z 
-2025-07-10T05:21:18.0371217Z 
-2025-07-10T05:21:18.0373816Z [1m[46m RUN [49m[22m [36mv3.2.4 [39m[90m/home/runner/work/Youtube-Clone/Youtube-Clone[39m
-2025-07-10T05:21:18.0374400Z       [2mCoverage enabled with [22m[33mv8[39m
-2025-07-10T05:21:18.0375058Z 
-2025-07-10T05:21:20.0795845Z  [31m❯[39m src/test/performance.test.jsx [2m([22m[2m13 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 439[2mms[22m[39m
-2025-07-10T05:21:20.0810087Z    [32m✓[39m Performance Tests[2m > [22mUtility Function Performance[2m > [22mshould handle large numbers efficiently[32m 4[2mms[22m[39m
-2025-07-10T05:21:20.0815717Z [31m   [31m×[31m Performance Tests[2m > [22mUtility Function Performance[2m > [22mshould handle repeated calls efficiently[39m[32m 47[2mms[22m[39m
-2025-07-10T05:21:20.0828120Z [31m     → expected 20.02378200000021 to be less than 20[39m
-2025-07-10T05:21:20.0832950Z    [32m✓[39m Performance Tests[2m > [22mComponent Render Performance[2m > [22mshould render Feed component efficiently with large datasets[32m 165[2mms[22m[39m
-2025-07-10T05:21:20.0838316Z    [32m✓[39m Performance Tests[2m > [22mComponent Render Performance[2m > [22mshould handle rapid re-renders efficiently[32m 14[2mms[22m[39m
-2025-07-10T05:21:20.0843319Z    [32m✓[39m Performance Tests[2m > [22mMemory Usage Tests[2m > [22mshould not cause memory leaks with component mounting/unmounting[32m 0[2mms[22m[39m
-2025-07-10T05:21:20.0848067Z    [32m✓[39m Performance Tests[2m > [22mAPI Call Optimization[2m > [22mshould debounce rapid API calls[32m 6[2mms[22m[39m
-2025-07-10T05:21:20.0851968Z    [32m✓[39m Performance Tests[2m > [22mBundle Size Considerations[2m > [22mshould import components efficiently[32m 69[2mms[22m[39m
-2025-07-10T05:21:20.0855068Z    [32m✓[39m Accessibility Tests[2m > [22mKeyboard Navigation[2m > [22mshould support keyboard navigation for interactive elements[32m 28[2mms[22m[39m
-2025-07-10T05:21:20.0864341Z    [32m✓[39m Accessibility Tests[2m > [22mScreen Reader Support[2m > [22mshould provide appropriate alt text for images[32m 19[2mms[22m[39m
-2025-07-10T05:21:20.0866199Z    [32m✓[39m Accessibility Tests[2m > [22mScreen Reader Support[2m > [22mshould provide semantic HTML structure[32m 3[2mms[22m[39m
-2025-07-10T05:21:20.0868071Z    [32m✓[39m Accessibility Tests[2m > [22mColor Contrast and Visual Accessibility[2m > [22mshould not rely solely on color for information[32m 20[2mms[22m[39m
-2025-07-10T05:21:20.0869801Z    [32m✓[39m Accessibility Tests[2m > [22mFocus Management[2m > [22mshould maintain logical focus order[32m 28[2mms[22m[39m
-2025-07-10T05:21:20.0881935Z    [32m✓[39m Accessibility Tests[2m > [22mARIA Labels and Roles[2m > [22mshould provide appropriate ARIA labels for complex interactions[32m 34[2mms[22m[39m
-2025-07-10T05:21:20.0883250Z  [32m✓[39m src/test/Feed.test.jsx [2m([22m[2m10 tests[22m[2m)[22m[33m 369[2mms[22m[39m
-2025-07-10T05:21:20.1422963Z  [32m✓[39m src/test/PlayVideo.test.jsx [2m([22m[2m12 tests[22m[2m)[22m[33m 419[2mms[22m[39m
-2025-07-10T05:21:21.9125185Z  [32m✓[39m src/test/Navbar.test.jsx [2m([22m[2m6 tests[22m[2m)[22m[32m 192[2mms[22m[39m
-2025-07-10T05:21:22.0198058Z  [32m✓[39m src/test/Recommended.test.jsx [2m([22m[2m15 tests[22m[2m)[22m[33m 301[2mms[22m[39m
-2025-07-10T05:21:22.0975191Z  [32m✓[39m src/test/Sidebar.test.jsx [2m([22m[2m12 tests[22m[2m)[22m[33m 520[2mms[22m[39m
-2025-07-10T05:21:23.3868066Z [90mstderr[2m | src/test/integration.test.jsx[2m > [22m[2mIntegration Tests[2m > [22m[2mNavigation Integration[2m > [22m[2mshould handle invalid routes
-2025-07-10T05:21:23.3869444Z [22m[39mNo routes matched location "/invalid-route" 
-2025-07-10T05:21:23.3869824Z 
-2025-07-10T05:21:23.4528592Z [90mstderr[2m | src/test/integration.test.jsx[2m > [22m[2mIntegration Tests[2m > [22m[2mError Boundaries and Edge Cases[2m > [22m[2mshould handle route parameter edge cases
-2025-07-10T05:21:23.4530146Z [22m[39mNo routes matched location "/video//test" 
-2025-07-10T05:21:23.4530796Z No routes matched location "/video/10/" 
-2025-07-10T05:21:23.4531134Z 
-2025-07-10T05:21:23.4783995Z [90mstderr[2m | src/test/routing.test.jsx[2m > [22m[2mRouting Integration[2m > [22m[2mshould handle invalid routes gracefully
-2025-07-10T05:21:23.4785356Z [22m[39mNo routes matched location "/invalid-route" 
-2025-07-10T05:21:23.4785718Z 
-2025-07-10T05:21:23.5033650Z  [32m✓[39m src/test/integration.test.jsx [2m([22m[2m15 tests[22m[2m)[22m[32m 233[2mms[22m[39m
-2025-07-10T05:21:23.5516514Z  [32m✓[39m src/test/Video.test.jsx [2m([22m[2m10 tests[22m[2m)[22m[32m 99[2mms[22m[39m
-2025-07-10T05:21:23.5566217Z  [32m✓[39m src/test/routing.test.jsx [2m([22m[2m4 tests[22m[2m)[22m[32m 67[2mms[22m[39m
-2025-07-10T05:21:24.8529512Z  [32m✓[39m src/test/state-management.test.jsx [2m([22m[2m4 tests[22m[2m)[22m[32m 84[2mms[22m[39m
-2025-07-10T05:21:24.9163204Z  [32m✓[39m src/test/Home.test.jsx [2m([22m[2m7 tests[22m[2m)[22m[32m 64[2mms[22m[39m
-2025-07-10T05:21:25.0087866Z  [32m✓[39m src/test/App.test.jsx [2m([22m[2m4 tests[22m[2m)[22m[32m 67[2mms[22m[39m
-2025-07-10T05:21:25.7403776Z  [32m✓[39m src/test/data.test.js [2m([22m[2m6 tests[22m[2m)[22m[32m 4[2mms[22m[39m
-2025-07-10T05:21:25.8911599Z 
-2025-07-10T05:21:25.8914239Z [31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
-2025-07-10T05:21:25.8917920Z 
-2025-07-10T05:21:25.8919355Z [41m[1m FAIL [22m[49m src/test/performance.test.jsx[2m > [22mPerformance Tests[2m > [22mUtility Function Performance[2m > [22mshould handle repeated calls efficiently
-2025-07-10T05:21:25.8953297Z [31m[1mAssertionError[22m: expected 20.02378200000021 to be less than 20[39m
-2025-07-10T05:21:25.8956228Z [36m [2m❯[22m src/test/performance.test.jsx:[2m72:29[22m[39m
-2025-07-10T05:21:25.9041428Z     [90m 70| [39m      
-2025-07-10T05:21:25.9042530Z     [90m 71| [39m      [90m// Should complete 10k calls in less than 20ms (increased for CI)[39m
-2025-07-10T05:21:25.9058413Z     [90m 72| [39m      [34mexpect[39m(executionTime)[33m.[39m[34mtoBeLessThan[39m([34m20[39m)
-2025-07-10T05:21:25.9060592Z     [90m   | [39m                            [31m^[39m
-2025-07-10T05:21:25.9061269Z     [90m 73| [39m    })
-2025-07-10T05:21:25.9072913Z 
-2025-07-10T05:21:25.9073790Z [2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m12 passed[39m[22m[90m (13)[39m
-2025-07-10T05:21:25.9075278Z [2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m117 passed[39m[22m[90m (118)[39m
-2025-07-10T05:21:25.9076163Z [2m   Start at [22m 05:21:17
-2025-07-10T05:21:25.9077458Z [2m   Duration [22m 7.85s[2m (transform 681ms, setup 1.79s, collect 2.94s, tests 2.86s, environment 7.78s, prepare 2.24s)[22m
-2025-07-10T05:21:25.9078199Z 
-2025-07-10T05:21:25.9078209Z 
-2025-07-10T05:21:25.9108743Z ##[error]AssertionError: expected 20.02378200000021 to be less than 20
- ❯ src/test/performance.test.jsx:72:29
-
-
-2025-07-10T05:21:25.9117456Z     [90m 74| [39m  })
-2025-07-10T05:21:25.9117699Z 
-2025-07-10T05:21:25.9118097Z [31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
-2025-07-10T05:21:25.9118421Z 
-2025-07-10T05:21:25.9638599Z ##[error]Process completed with exit code 1.
-2025-07-10T05:21:25.9737644Z Post job cleanup.
-2025-07-10T05:21:26.0671786Z [command]/usr/bin/git version
-2025-07-10T05:21:26.0708260Z git version 2.49.0
-2025-07-10T05:21:26.0752147Z Temporarily overriding HOME='/home/runner/work/_temp/2a8026e9-6f3a-4cc5-8389-cb5fa6cfca66' before making global git config changes
-2025-07-10T05:21:26.0753687Z Adding repository directory to the temporary git global config as a safe directory
-2025-07-10T05:21:26.0758818Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Youtube-Clone/Youtube-Clone
-2025-07-10T05:21:26.0793776Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
-2025-07-10T05:21:26.0826228Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
-2025-07-10T05:21:26.1045923Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
-2025-07-10T05:21:26.1065883Z http.https://github.com/.extraheader
-2025-07-10T05:21:26.1078724Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
-2025-07-10T05:21:26.1108995Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
-2025-07-10T05:21:26.1431888Z Cleaning up orphan processes
+2025-07-10T06:09:28.2603522Z Current runner version: '2.325.0'
+2025-07-10T06:09:28.2626053Z ##[group]Runner Image Provisioner
+2025-07-10T06:09:28.2626965Z Hosted Compute Agent
+2025-07-10T06:09:28.2627798Z Version: 20250703.357
+2025-07-10T06:09:28.2628389Z Commit: 07daf62238a21140d93e045a38f3784d75c509e1
+2025-07-10T06:09:28.2629127Z Build Date: 2025-07-03T14:39:09Z
+2025-07-10T06:09:28.2629741Z ##[endgroup]
+2025-07-10T06:09:28.2630285Z ##[group]Operating System
+2025-07-10T06:09:28.2630873Z Ubuntu
+2025-07-10T06:09:28.2631376Z 24.04.2
+2025-07-10T06:09:28.2631809Z LTS
+2025-07-10T06:09:28.2632341Z ##[endgroup]
+2025-07-10T06:09:28.2632825Z ##[group]Runner Image
+2025-07-10T06:09:28.2633375Z Image: ubuntu-24.04
+2025-07-10T06:09:28.2633907Z Version: 20250629.1.0
+2025-07-10T06:09:28.2634913Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20250629.1/images/ubuntu/Ubuntu2404-Readme.md
+2025-07-10T06:09:28.2636417Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20250629.1
+2025-07-10T06:09:28.2637789Z ##[endgroup]
+2025-07-10T06:09:28.2638924Z ##[group]GITHUB_TOKEN Permissions
+2025-07-10T06:09:28.2640778Z Contents: read
+2025-07-10T06:09:28.2641338Z Metadata: read
+2025-07-10T06:09:28.2641950Z Packages: read
+2025-07-10T06:09:28.2642430Z ##[endgroup]
+2025-07-10T06:09:28.2644862Z Secret source: Actions
+2025-07-10T06:09:28.2645604Z Prepare workflow directory
+2025-07-10T06:09:28.2968195Z Prepare all required actions
+2025-07-10T06:09:28.3005411Z Getting action download info
+2025-07-10T06:09:28.5906768Z ##[group]Download immutable action package 'actions/checkout@v4'
+2025-07-10T06:09:28.5908145Z Version: 4.2.2
+2025-07-10T06:09:28.5909181Z Digest: sha256:ccb2698953eaebd21c7bf6268a94f9c26518a7e38e27e0b83c1fe1ad049819b1
+2025-07-10T06:09:28.5910358Z Source commit SHA: 11bd71901bbe5b1630ceea73d27597364c9af683
+2025-07-10T06:09:28.5911162Z ##[endgroup]
+2025-07-10T06:09:28.6909650Z ##[group]Download immutable action package 'docker/setup-buildx-action@v3'
+2025-07-10T06:09:28.6910542Z Version: 3.11.1
+2025-07-10T06:09:28.6911400Z Digest: sha256:b58e632d2d812e161c8abeba6def9f56b420aa9ae41d825a8408241bcad0f303
+2025-07-10T06:09:28.6912307Z Source commit SHA: e468171a9de216ec08956ac3ada2f0791b6bd435
+2025-07-10T06:09:28.6912992Z ##[endgroup]
+2025-07-10T06:09:29.0239703Z Complete job name: docker-test
+2025-07-10T06:09:29.0902644Z ##[group]Run actions/checkout@v4
+2025-07-10T06:09:29.0903464Z with:
+2025-07-10T06:09:29.0903892Z   repository: sudo-hrmn/Youtube-Clone
+2025-07-10T06:09:29.0904560Z   token: ***
+2025-07-10T06:09:29.0904943Z   ssh-strict: true
+2025-07-10T06:09:29.0905340Z   ssh-user: git
+2025-07-10T06:09:29.0905741Z   persist-credentials: true
+2025-07-10T06:09:29.0906191Z   clean: true
+2025-07-10T06:09:29.0906593Z   sparse-checkout-cone-mode: true
+2025-07-10T06:09:29.0907245Z   fetch-depth: 1
+2025-07-10T06:09:29.0907640Z   fetch-tags: false
+2025-07-10T06:09:29.0908049Z   show-progress: true
+2025-07-10T06:09:29.0908462Z   lfs: false
+2025-07-10T06:09:29.0908833Z   submodules: false
+2025-07-10T06:09:29.0909247Z   set-safe-directory: true
+2025-07-10T06:09:29.0909952Z ##[endgroup]
+2025-07-10T06:09:29.1961425Z Syncing repository: sudo-hrmn/Youtube-Clone
+2025-07-10T06:09:29.1963163Z ##[group]Getting Git version info
+2025-07-10T06:09:29.1963985Z Working directory is '/home/runner/work/Youtube-Clone/Youtube-Clone'
+2025-07-10T06:09:29.1964994Z [command]/usr/bin/git version
+2025-07-10T06:09:29.2015799Z git version 2.49.0
+2025-07-10T06:09:29.2041980Z ##[endgroup]
+2025-07-10T06:09:29.2062151Z Temporarily overriding HOME='/home/runner/work/_temp/6e19bf1b-f618-45c3-baa1-6399b9867eff' before making global git config changes
+2025-07-10T06:09:29.2066756Z Adding repository directory to the temporary git global config as a safe directory
+2025-07-10T06:09:29.2068248Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Youtube-Clone/Youtube-Clone
+2025-07-10T06:09:29.2100429Z Deleting the contents of '/home/runner/work/Youtube-Clone/Youtube-Clone'
+2025-07-10T06:09:29.2103840Z ##[group]Initializing the repository
+2025-07-10T06:09:29.2107782Z [command]/usr/bin/git init /home/runner/work/Youtube-Clone/Youtube-Clone
+2025-07-10T06:09:29.2188100Z hint: Using 'master' as the name for the initial branch. This default branch name
+2025-07-10T06:09:29.2189496Z hint: is subject to change. To configure the initial branch name to use in all
+2025-07-10T06:09:29.2190845Z hint: of your new repositories, which will suppress this warning, call:
+2025-07-10T06:09:29.2192016Z hint:
+2025-07-10T06:09:29.2193094Z hint: 	git config --global init.defaultBranch <name>
+2025-07-10T06:09:29.2194126Z hint:
+2025-07-10T06:09:29.2195081Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2025-07-10T06:09:29.2196156Z hint: 'development'. The just-created branch can be renamed via this command:
+2025-07-10T06:09:29.2196897Z hint:
+2025-07-10T06:09:29.2197539Z hint: 	git branch -m <name>
+2025-07-10T06:09:29.2198354Z Initialized empty Git repository in /home/runner/work/Youtube-Clone/Youtube-Clone/.git/
+2025-07-10T06:09:29.2205235Z [command]/usr/bin/git remote add origin https://github.com/sudo-hrmn/Youtube-Clone
+2025-07-10T06:09:29.2238273Z ##[endgroup]
+2025-07-10T06:09:29.2239005Z ##[group]Disabling automatic garbage collection
+2025-07-10T06:09:29.2242098Z [command]/usr/bin/git config --local gc.auto 0
+2025-07-10T06:09:29.2275899Z ##[endgroup]
+2025-07-10T06:09:29.2276645Z ##[group]Setting up auth
+2025-07-10T06:09:29.2283764Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-07-10T06:09:29.2321400Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-07-10T06:09:29.2715904Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-07-10T06:09:29.2749308Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-07-10T06:09:29.2989887Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-07-10T06:09:29.3038026Z ##[endgroup]
+2025-07-10T06:09:29.3040329Z ##[group]Fetching the repository
+2025-07-10T06:09:29.3048934Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +96a2bcbfe3de657c543ee80b85ae9d5d4d9a12c6:refs/remotes/origin/main
+2025-07-10T06:09:29.6274107Z From https://github.com/sudo-hrmn/Youtube-Clone
+2025-07-10T06:09:29.6275784Z  * [new ref]         96a2bcbfe3de657c543ee80b85ae9d5d4d9a12c6 -> origin/main
+2025-07-10T06:09:29.6303092Z ##[endgroup]
+2025-07-10T06:09:29.6304335Z ##[group]Determining the checkout info
+2025-07-10T06:09:29.6305753Z ##[endgroup]
+2025-07-10T06:09:29.6311250Z [command]/usr/bin/git sparse-checkout disable
+2025-07-10T06:09:29.6353087Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-07-10T06:09:29.6383064Z ##[group]Checking out the ref
+2025-07-10T06:09:29.6384816Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-07-10T06:09:29.6605593Z Switched to a new branch 'main'
+2025-07-10T06:09:29.6607463Z branch 'main' set up to track 'origin/main'.
+2025-07-10T06:09:29.6614315Z ##[endgroup]
+2025-07-10T06:09:29.6649575Z [command]/usr/bin/git log -1 --format=%H
+2025-07-10T06:09:29.6671656Z 96a2bcbfe3de657c543ee80b85ae9d5d4d9a12c6
+2025-07-10T06:09:29.7002032Z ##[group]Run docker/setup-buildx-action@v3
+2025-07-10T06:09:29.7003181Z with:
+2025-07-10T06:09:29.7003899Z   driver: docker-container
+2025-07-10T06:09:29.7004787Z   install: false
+2025-07-10T06:09:29.7005518Z   use: true
+2025-07-10T06:09:29.7006215Z   keep-state: false
+2025-07-10T06:09:29.7007026Z   cache-binary: true
+2025-07-10T06:09:29.7007974Z   cleanup: true
+2025-07-10T06:09:29.7008717Z ##[endgroup]
+2025-07-10T06:09:29.9795569Z ##[group]Docker info
+2025-07-10T06:09:29.9822290Z [command]/usr/bin/docker version
+2025-07-10T06:09:30.0383344Z Client: Docker Engine - Community
+2025-07-10T06:09:30.0385610Z  Version:           28.0.4
+2025-07-10T06:09:30.0386720Z  API version:       1.48
+2025-07-10T06:09:30.0387945Z  Go version:        go1.23.7
+2025-07-10T06:09:30.0389060Z  Git commit:        b8034c0
+2025-07-10T06:09:30.0390215Z  Built:             Tue Mar 25 15:07:16 2025
+2025-07-10T06:09:30.0391465Z  OS/Arch:           linux/amd64
+2025-07-10T06:09:30.0392670Z  Context:           default
+2025-07-10T06:09:30.0393378Z 
+2025-07-10T06:09:30.0393806Z Server: Docker Engine - Community
+2025-07-10T06:09:30.0394926Z  Engine:
+2025-07-10T06:09:30.0395710Z   Version:          28.0.4
+2025-07-10T06:09:30.0396861Z   API version:      1.48 (minimum version 1.24)
+2025-07-10T06:09:30.0398053Z   Go version:       go1.23.7
+2025-07-10T06:09:30.0398732Z   Git commit:       6430e49
+2025-07-10T06:09:30.0399425Z   Built:            Tue Mar 25 15:07:16 2025
+2025-07-10T06:09:30.0400198Z   OS/Arch:          linux/amd64
+2025-07-10T06:09:30.0400895Z   Experimental:     false
+2025-07-10T06:09:30.0401538Z  containerd:
+2025-07-10T06:09:30.0402081Z   Version:          1.7.27
+2025-07-10T06:09:30.0402886Z   GitCommit:        05044ec0a9a75232cad458027ca83437aae3f4da
+2025-07-10T06:09:30.0403779Z  runc:
+2025-07-10T06:09:30.0404264Z   Version:          1.2.5
+2025-07-10T06:09:30.0405030Z   GitCommit:        v1.2.5-0-g59923ef
+2025-07-10T06:09:30.0405864Z  docker-init:
+2025-07-10T06:09:30.0406498Z   Version:          0.19.0
+2025-07-10T06:09:30.0407426Z   GitCommit:        de40ad0
+2025-07-10T06:09:30.0436933Z [command]/usr/bin/docker info
+2025-07-10T06:09:32.9826653Z Client: Docker Engine - Community
+2025-07-10T06:09:32.9827741Z  Version:    28.0.4
+2025-07-10T06:09:32.9828135Z  Context:    default
+2025-07-10T06:09:32.9828519Z  Debug Mode: false
+2025-07-10T06:09:32.9828891Z  Plugins:
+2025-07-10T06:09:32.9829264Z   buildx: Docker Buildx (Docker Inc.)
+2025-07-10T06:09:32.9829720Z     Version:  v0.25.0
+2025-07-10T06:09:32.9830190Z     Path:     /usr/libexec/docker/cli-plugins/docker-buildx
+2025-07-10T06:09:32.9830855Z   compose: Docker Compose (Docker Inc.)
+2025-07-10T06:09:32.9831325Z     Version:  v2.36.2
+2025-07-10T06:09:32.9832259Z     Path:     /usr/libexec/docker/cli-plugins/docker-compose
+2025-07-10T06:09:32.9832718Z 
+2025-07-10T06:09:32.9832872Z Server:
+2025-07-10T06:09:32.9833212Z  Containers: 0
+2025-07-10T06:09:32.9833576Z   Running: 0
+2025-07-10T06:09:32.9833985Z   Paused: 0
+2025-07-10T06:09:32.9834325Z   Stopped: 0
+2025-07-10T06:09:32.9834680Z  Images: 0
+2025-07-10T06:09:32.9835018Z  Server Version: 28.0.4
+2025-07-10T06:09:32.9835434Z  Storage Driver: overlay2
+2025-07-10T06:09:32.9835849Z   Backing Filesystem: extfs
+2025-07-10T06:09:32.9836253Z   Supports d_type: true
+2025-07-10T06:09:32.9836937Z   Using metacopy: false
+2025-07-10T06:09:32.9837656Z   Native Overlay Diff: false
+2025-07-10T06:09:32.9838070Z   userxattr: false
+2025-07-10T06:09:32.9838441Z  Logging Driver: json-file
+2025-07-10T06:09:32.9838872Z  Cgroup Driver: systemd
+2025-07-10T06:09:32.9839270Z  Cgroup Version: 2
+2025-07-10T06:09:32.9839643Z  Plugins:
+2025-07-10T06:09:32.9840087Z   Volume: local
+2025-07-10T06:09:32.9840527Z   Network: bridge host ipvlan macvlan null overlay
+2025-07-10T06:09:32.9841243Z   Log: awslogs fluentd gcplogs gelf journald json-file local splunk syslog
+2025-07-10T06:09:32.9841862Z  Swarm: inactive
+2025-07-10T06:09:32.9842247Z  Runtimes: io.containerd.runc.v2 runc
+2025-07-10T06:09:32.9842722Z  Default Runtime: runc
+2025-07-10T06:09:32.9843772Z  Init Binary: docker-init
+2025-07-10T06:09:32.9844430Z  containerd version: 05044ec0a9a75232cad458027ca83437aae3f4da
+2025-07-10T06:09:32.9845084Z  runc version: v1.2.5-0-g59923ef
+2025-07-10T06:09:32.9845568Z  init version: de40ad0
+2025-07-10T06:09:32.9845978Z  Security Options:
+2025-07-10T06:09:32.9846351Z   apparmor
+2025-07-10T06:09:32.9846680Z   seccomp
+2025-07-10T06:09:32.9847023Z    Profile: builtin
+2025-07-10T06:09:32.9847570Z   cgroupns
+2025-07-10T06:09:32.9847906Z  Kernel Version: 6.11.0-1015-azure
+2025-07-10T06:09:32.9848364Z  Operating System: Ubuntu 24.04.2 LTS
+2025-07-10T06:09:32.9849115Z  OSType: linux
+2025-07-10T06:09:32.9849474Z  Architecture: x86_64
+2025-07-10T06:09:32.9849867Z  CPUs: 4
+2025-07-10T06:09:32.9850208Z  Total Memory: 15.62GiB
+2025-07-10T06:09:32.9850621Z  Name: pkrvmfkh1xnbeme
+2025-07-10T06:09:32.9851046Z  ID: f3f57c73-cc58-4859-b84c-8d290ada94db
+2025-07-10T06:09:32.9851511Z  Docker Root Dir: /var/lib/docker
+2025-07-10T06:09:32.9851956Z  Debug Mode: false
+2025-07-10T06:09:32.9852361Z  Username: githubactions
+2025-07-10T06:09:32.9852799Z  Experimental: false
+2025-07-10T06:09:32.9853212Z  Insecure Registries:
+2025-07-10T06:09:32.9858219Z   ::1/128
+2025-07-10T06:09:32.9858610Z   127.0.0.0/8
+2025-07-10T06:09:32.9859031Z  Live Restore Enabled: false
+2025-07-10T06:09:32.9859346Z 
+2025-07-10T06:09:32.9860380Z ##[endgroup]
+2025-07-10T06:09:33.0615198Z ##[group]Buildx version
+2025-07-10T06:09:33.0636088Z [command]/usr/bin/docker buildx version
+2025-07-10T06:09:33.1018925Z github.com/docker/buildx v0.25.0 faaea65da4ba0e58a13cd9cadcb950c51cf3b3c9
+2025-07-10T06:09:33.1048681Z ##[endgroup]
+2025-07-10T06:09:33.1200504Z ##[group]Inspecting default docker context
+2025-07-10T06:09:33.1336688Z [
+2025-07-10T06:09:33.1337339Z   {
+2025-07-10T06:09:33.1337668Z     "Name": "default",
+2025-07-10T06:09:33.1337989Z     "Metadata": {},
+2025-07-10T06:09:33.1338228Z     "Endpoints": {
+2025-07-10T06:09:33.1338444Z       "docker": {
+2025-07-10T06:09:33.1338689Z         "Host": "unix:///var/run/docker.sock",
+2025-07-10T06:09:33.1339059Z         "SkipTLSVerify": false
+2025-07-10T06:09:33.1339313Z       }
+2025-07-10T06:09:33.1339495Z     },
+2025-07-10T06:09:33.1339752Z     "TLSMaterial": {},
+2025-07-10T06:09:33.1340073Z     "Storage": {
+2025-07-10T06:09:33.1340301Z       "MetadataPath": "<IN MEMORY>",
+2025-07-10T06:09:33.1340586Z       "TLSPath": "<IN MEMORY>"
+2025-07-10T06:09:33.1340819Z     }
+2025-07-10T06:09:33.1341064Z   }
+2025-07-10T06:09:33.1341322Z ]
+2025-07-10T06:09:33.1341937Z ##[endgroup]
+2025-07-10T06:09:33.1342382Z ##[group]Creating a new builder instance
+2025-07-10T06:09:33.2680477Z [command]/usr/bin/docker buildx create --name builder-3d3e5670-23b0-4582-b035-7d26be2436ab --driver docker-container --buildkitd-flags --allow-insecure-entitlement security.insecure --allow-insecure-entitlement network.host --use
+2025-07-10T06:09:33.3292625Z builder-3d3e5670-23b0-4582-b035-7d26be2436ab
+2025-07-10T06:09:33.3326244Z ##[endgroup]
+2025-07-10T06:09:33.3326932Z ##[group]Booting builder
+2025-07-10T06:09:33.3364559Z [command]/usr/bin/docker buildx inspect --bootstrap --builder builder-3d3e5670-23b0-4582-b035-7d26be2436ab
+2025-07-10T06:09:33.3954311Z #1 [internal] booting buildkit
+2025-07-10T06:09:33.5460382Z #1 pulling image moby/buildkit:buildx-stable-1
+2025-07-10T06:09:35.5031549Z #1 pulling image moby/buildkit:buildx-stable-1 2.1s done
+2025-07-10T06:09:35.6541495Z #1 creating container buildx_buildkit_builder-3d3e5670-23b0-4582-b035-7d26be2436ab0
+2025-07-10T06:09:35.7869905Z #1 creating container buildx_buildkit_builder-3d3e5670-23b0-4582-b035-7d26be2436ab0 0.3s done
+2025-07-10T06:09:35.7891277Z #1 DONE 2.4s
+2025-07-10T06:09:35.8201631Z Name:          builder-3d3e5670-23b0-4582-b035-7d26be2436ab
+2025-07-10T06:09:35.8203198Z Driver:        docker-container
+2025-07-10T06:09:35.8205032Z Last Activity: 2025-07-10 06:09:33 +0000 UTC
+2025-07-10T06:09:35.8205826Z 
+2025-07-10T06:09:35.8206165Z Nodes:
+2025-07-10T06:09:35.8206778Z Name:                  builder-3d3e5670-23b0-4582-b035-7d26be2436ab0
+2025-07-10T06:09:35.8213023Z Endpoint:              unix:///var/run/docker.sock
+2025-07-10T06:09:35.8215693Z Status:                running
+2025-07-10T06:09:35.8216598Z BuildKit daemon flags: --allow-insecure-entitlement security.insecure --allow-insecure-entitlement network.host
+2025-07-10T06:09:35.8217671Z BuildKit version:      v0.22.0
+2025-07-10T06:09:35.8218193Z Platforms:             linux/amd64, linux/amd64/v2, linux/amd64/v3, linux/386
+2025-07-10T06:09:35.8218717Z Labels:
+2025-07-10T06:09:35.8219095Z  org.mobyproject.buildkit.worker.executor:         oci
+2025-07-10T06:09:35.8219745Z  org.mobyproject.buildkit.worker.hostname:         e07de1622ff3
+2025-07-10T06:09:35.8220713Z  org.mobyproject.buildkit.worker.network:          host
+2025-07-10T06:09:35.8221343Z  org.mobyproject.buildkit.worker.oci.process-mode: sandbox
+2025-07-10T06:09:35.8222002Z  org.mobyproject.buildkit.worker.selinux.enabled:  false
+2025-07-10T06:09:35.8222676Z  org.mobyproject.buildkit.worker.snapshotter:      overlayfs
+2025-07-10T06:09:35.8225675Z GC Policy rule#0:
+2025-07-10T06:09:35.8225999Z  All:            false
+2025-07-10T06:09:35.8226529Z  Filters:        type==source.local,type==exec.cachemount,type==source.git.checkout
+2025-07-10T06:09:35.8227290Z  Keep Duration:  48h0m0s
+2025-07-10T06:09:35.8227625Z  Max Used Space: 488.3MiB
+2025-07-10T06:09:35.8227960Z GC Policy rule#1:
+2025-07-10T06:09:35.8228251Z  All:            false
+2025-07-10T06:09:35.8228570Z  Keep Duration:  1440h0m0s
+2025-07-10T06:09:35.8228917Z  Reserved Space: 7.451GiB
+2025-07-10T06:09:35.8229250Z  Max Used Space: 54.02GiB
+2025-07-10T06:09:35.8229611Z  Min Free Space: 13.97GiB
+2025-07-10T06:09:35.8229945Z GC Policy rule#2:
+2025-07-10T06:09:35.8230257Z  All:            false
+2025-07-10T06:09:35.8230566Z  Reserved Space: 7.451GiB
+2025-07-10T06:09:35.8230922Z  Max Used Space: 54.02GiB
+2025-07-10T06:09:35.8231251Z  Min Free Space: 13.97GiB
+2025-07-10T06:09:35.8231626Z GC Policy rule#3:
+2025-07-10T06:09:35.8231918Z  All:            true
+2025-07-10T06:09:35.8232273Z  Reserved Space: 7.451GiB
+2025-07-10T06:09:35.8232621Z  Max Used Space: 54.02GiB
+2025-07-10T06:09:35.8232967Z  Min Free Space: 13.97GiB
+2025-07-10T06:09:35.8258036Z ##[endgroup]
+2025-07-10T06:09:35.9042309Z ##[group]Inspect builder
+2025-07-10T06:09:35.9044970Z {
+2025-07-10T06:09:35.9045215Z   "nodes": [
+2025-07-10T06:09:35.9045463Z     {
+2025-07-10T06:09:35.9045810Z       "name": "builder-3d3e5670-23b0-4582-b035-7d26be2436ab0",
+2025-07-10T06:09:35.9046356Z       "endpoint": "unix:///var/run/docker.sock",
+2025-07-10T06:09:35.9046659Z       "status": "running",
+2025-07-10T06:09:35.9047363Z       "buildkitd-flags": "--allow-insecure-entitlement security.insecure --allow-insecure-entitlement network.host",
+2025-07-10T06:09:35.9047855Z       "buildkit": "v0.22.0",
+2025-07-10T06:09:35.9048149Z       "platforms": "linux/amd64,linux/amd64/v2,linux/amd64/v3,linux/386",
+2025-07-10T06:09:35.9048449Z       "features": {
+2025-07-10T06:09:35.9048722Z         "Automatically load images to the Docker Engine image store": true,
+2025-07-10T06:09:35.9049193Z         "Cache export": true,
+2025-07-10T06:09:35.9049451Z         "Direct push": true,
+2025-07-10T06:09:35.9049656Z         "Docker exporter": true,
+2025-07-10T06:09:35.9049875Z         "Multi-platform build": true,
+2025-07-10T06:09:35.9050200Z         "OCI exporter": true
+2025-07-10T06:09:35.9050461Z       },
+2025-07-10T06:09:35.9050617Z       "labels": {
+2025-07-10T06:09:35.9050847Z         "org.mobyproject.buildkit.worker.executor": "oci",
+2025-07-10T06:09:35.9051213Z         "org.mobyproject.buildkit.worker.hostname": "e07de1622ff3",
+2025-07-10T06:09:35.9051571Z         "org.mobyproject.buildkit.worker.network": "host",
+2025-07-10T06:09:35.9051968Z         "org.mobyproject.buildkit.worker.oci.process-mode": "sandbox",
+2025-07-10T06:09:35.9052566Z         "org.mobyproject.buildkit.worker.selinux.enabled": "false",
+2025-07-10T06:09:35.9052949Z         "org.mobyproject.buildkit.worker.snapshotter": "overlayfs"
+2025-07-10T06:09:35.9053245Z       },
+2025-07-10T06:09:35.9053395Z       "gcPolicy": [
+2025-07-10T06:09:35.9053801Z         {
+2025-07-10T06:09:35.9053961Z           "all": false,
+2025-07-10T06:09:35.9054141Z           "filter": [
+2025-07-10T06:09:35.9054320Z             "type==source.local",
+2025-07-10T06:09:35.9054561Z             "type==exec.cachemount",
+2025-07-10T06:09:35.9054793Z             "type==source.git.checkout"
+2025-07-10T06:09:35.9055006Z           ],
+2025-07-10T06:09:35.9055176Z           "keepDuration": "48h0m0s",
+2025-07-10T06:09:35.9055386Z           "maxUsedSpace": "488.3MiB"
+2025-07-10T06:09:35.9055586Z         },
+2025-07-10T06:09:35.9055894Z         {
+2025-07-10T06:09:35.9056045Z           "all": false,
+2025-07-10T06:09:35.9056225Z           "keepDuration": "1440h0m0s",
+2025-07-10T06:09:35.9056454Z           "reservedSpace": "7.451GiB",
+2025-07-10T06:09:35.9056678Z           "maxUsedSpace": "54.02GiB",
+2025-07-10T06:09:35.9056892Z           "minFreeSpace": "13.97GiB"
+2025-07-10T06:09:35.9057288Z         },
+2025-07-10T06:09:35.9057433Z         {
+2025-07-10T06:09:35.9057586Z           "all": false,
+2025-07-10T06:09:35.9057765Z           "reservedSpace": "7.451GiB",
+2025-07-10T06:09:35.9057984Z           "maxUsedSpace": "54.02GiB",
+2025-07-10T06:09:35.9058192Z           "minFreeSpace": "13.97GiB"
+2025-07-10T06:09:35.9058389Z         },
+2025-07-10T06:09:35.9058526Z         {
+2025-07-10T06:09:35.9058672Z           "all": true,
+2025-07-10T06:09:35.9058852Z           "reservedSpace": "7.451GiB",
+2025-07-10T06:09:35.9059071Z           "maxUsedSpace": "54.02GiB",
+2025-07-10T06:09:35.9059289Z           "minFreeSpace": "13.97GiB"
+2025-07-10T06:09:35.9059488Z         }
+2025-07-10T06:09:35.9059629Z       ]
+2025-07-10T06:09:35.9059761Z     }
+2025-07-10T06:09:35.9059898Z   ],
+2025-07-10T06:09:35.9060092Z   "name": "builder-3d3e5670-23b0-4582-b035-7d26be2436ab",
+2025-07-10T06:09:35.9060373Z   "driver": "docker-container",
+2025-07-10T06:09:35.9060595Z   "lastActivity": "2025-07-10T06:09:33.000Z"
+2025-07-10T06:09:35.9060818Z }
+2025-07-10T06:09:35.9061127Z ##[endgroup]
+2025-07-10T06:09:35.9061414Z ##[group]BuildKit version
+2025-07-10T06:09:35.9061661Z builder-3d3e5670-23b0-4582-b035-7d26be2436ab0: v0.22.0
+2025-07-10T06:09:35.9062041Z ##[endgroup]
+2025-07-10T06:09:35.9251184Z ##[group]Run docker build -t youtube-clone:test --target production .
+2025-07-10T06:09:35.9251844Z [36;1mdocker build -t youtube-clone:test --target production .[0m
+2025-07-10T06:09:35.9376900Z shell: /usr/bin/bash -e {0}
+2025-07-10T06:09:35.9377443Z ##[endgroup]
+2025-07-10T06:09:36.2347534Z #0 building with "default" instance using docker driver
+2025-07-10T06:09:36.2347984Z 
+2025-07-10T06:09:36.2348152Z #1 [internal] load build definition from Dockerfile
+2025-07-10T06:09:36.2348613Z #1 transferring dockerfile: 3.75kB done
+2025-07-10T06:09:36.2348922Z #1 DONE 0.0s
+2025-07-10T06:09:36.2349060Z 
+2025-07-10T06:09:36.2349236Z #2 [auth] library/node:pull token for registry-1.docker.io
+2025-07-10T06:09:36.2349615Z #2 DONE 0.0s
+2025-07-10T06:09:36.2349739Z 
+2025-07-10T06:09:36.2349904Z #3 [auth] library/nginx:pull token for registry-1.docker.io
+2025-07-10T06:09:36.2350255Z #3 DONE 0.0s
+2025-07-10T06:09:36.2350371Z 
+2025-07-10T06:09:36.2350627Z #4 [internal] load metadata for docker.io/library/nginx:1.25-alpine
+2025-07-10T06:09:36.3137410Z #4 ...
+2025-07-10T06:09:36.3137601Z 
+2025-07-10T06:09:36.3137892Z #5 [internal] load metadata for docker.io/library/node:20-alpine
+2025-07-10T06:09:36.3138341Z #5 DONE 0.2s
+2025-07-10T06:09:36.4405578Z 
+2025-07-10T06:09:36.4406322Z #4 [internal] load metadata for docker.io/library/nginx:1.25-alpine
+2025-07-10T06:09:36.4406920Z #4 DONE 0.2s
+2025-07-10T06:09:36.4407249Z 
+2025-07-10T06:09:36.4407425Z #6 [internal] load .dockerignore
+2025-07-10T06:09:36.4407796Z #6 transferring context: 950B done
+2025-07-10T06:09:36.4408163Z #6 DONE 0.0s
+2025-07-10T06:09:36.4408263Z 
+2025-07-10T06:09:36.4408341Z #7 [internal] load build context
+2025-07-10T06:09:36.4408739Z #7 transferring context: 5.16MB 0.0s done
+2025-07-10T06:09:36.4409141Z #7 DONE 0.1s
+2025-07-10T06:09:36.4409312Z 
+2025-07-10T06:09:36.4409892Z #8 [builder 1/7] FROM docker.io/library/node:20-alpine@sha256:fa316946c0cb1f041fe46dda150f3085b71168555e5706ec0c7466a5bae12244
+2025-07-10T06:09:36.4411145Z #8 resolve docker.io/library/node:20-alpine@sha256:fa316946c0cb1f041fe46dda150f3085b71168555e5706ec0c7466a5bae12244 done
+2025-07-10T06:09:36.4412215Z #8 extracting sha256:fe07684b16b82247c3539ed86a65ff37a76138ec25d380bd80c869a1a4c73236
+2025-07-10T06:09:36.4413200Z #8 sha256:da9722576d07f63c233c15985fb5109ec5ab65eb5cede4bb7fcd4e212d194613 6.42kB / 6.42kB done
+2025-07-10T06:09:36.4414195Z #8 sha256:fe07684b16b82247c3539ed86a65ff37a76138ec25d380bd80c869a1a4c73236 3.80MB / 3.80MB 0.1s done
+2025-07-10T06:09:36.4415617Z #8 sha256:0c54b794b00440f2499cd0df810d1b53ecb69afe190c885956e1e8ff92fec01d 3.15MB / 42.99MB 0.1s
+2025-07-10T06:09:36.4416655Z #8 sha256:a54eeddfc49c9ef8588e38ee29e59a0e7ad1c5967d3d001f253aed0cb11d56a4 1.26MB / 1.26MB 0.1s done
+2025-07-10T06:09:36.4417902Z #8 sha256:b7f182da327e7013ff937fdf2ce36f3deb5e723dcfccc5fdbdbc708fe03a7698 0B / 446B 0.1s
+2025-07-10T06:09:36.4418950Z #8 sha256:fa316946c0cb1f041fe46dda150f3085b71168555e5706ec0c7466a5bae12244 7.67kB / 7.67kB done
+2025-07-10T06:09:36.4419973Z #8 sha256:9d015b82e81e8107ef0d341a8ef2d6ca4a6bc6f3b6659bd5869316eef3779761 1.72kB / 1.72kB done
+2025-07-10T06:09:36.5408964Z #8 extracting sha256:fe07684b16b82247c3539ed86a65ff37a76138ec25d380bd80c869a1a4c73236 0.1s done
+2025-07-10T06:09:36.5410160Z #8 sha256:0c54b794b00440f2499cd0df810d1b53ecb69afe190c885956e1e8ff92fec01d 18.87MB / 42.99MB 0.2s
+2025-07-10T06:09:36.5411230Z #8 sha256:b7f182da327e7013ff937fdf2ce36f3deb5e723dcfccc5fdbdbc708fe03a7698 446B / 446B 0.1s done
+2025-07-10T06:09:36.6414120Z #8 sha256:0c54b794b00440f2499cd0df810d1b53ecb69afe190c885956e1e8ff92fec01d 33.23MB / 42.99MB 0.3s
+2025-07-10T06:09:36.7442321Z #8 sha256:0c54b794b00440f2499cd0df810d1b53ecb69afe190c885956e1e8ff92fec01d 42.99MB / 42.99MB 0.4s done
+2025-07-10T06:09:36.7444530Z #8 extracting sha256:0c54b794b00440f2499cd0df810d1b53ecb69afe190c885956e1e8ff92fec01d
+2025-07-10T06:09:37.6253952Z #8 ...
+2025-07-10T06:09:37.6256117Z 
+2025-07-10T06:09:37.6257834Z #9 [production 1/8] FROM docker.io/library/nginx:1.25-alpine@sha256:516475cc129da42866742567714ddc681e5eed7b9ee0b9e9c015e464b4221a00
+2025-07-10T06:09:37.6262922Z #9 resolve docker.io/library/nginx:1.25-alpine@sha256:516475cc129da42866742567714ddc681e5eed7b9ee0b9e9c015e464b4221a00 done
+2025-07-10T06:09:37.6264074Z #9 sha256:516475cc129da42866742567714ddc681e5eed7b9ee0b9e9c015e464b4221a00 9.07kB / 9.07kB done
+2025-07-10T06:09:37.6265073Z #9 sha256:501d84f5d06487ff81e506134dc922ed4fd2080d5521eb5b6ee4054fa17d15c4 10.80kB / 10.80kB done
+2025-07-10T06:09:37.6266085Z #9 sha256:721fa00bc549df26b3e67cc558ff176112d4ba69847537766f3c28e171d180e7 2.50kB / 2.50kB done
+2025-07-10T06:09:37.6267295Z #9 sha256:4abcf20661432fb2d719aaf90656f55c287f8ca915dc1c92ec14ff61e67fbaf8 3.41MB / 3.41MB 0.1s done
+2025-07-10T06:09:37.6268343Z #9 extracting sha256:4abcf20661432fb2d719aaf90656f55c287f8ca915dc1c92ec14ff61e67fbaf8 0.1s done
+2025-07-10T06:09:37.6269362Z #9 sha256:13fcfbc94648785b918ecc1af675ac5187cdfc30f4fdaf9afa8bd2e9dedf548b 954B / 954B 0.2s done
+2025-07-10T06:09:37.6270426Z #9 sha256:fc21a1d387f514f53589abea6d67cd6b329dfd3c9059bc96a552af3b3c97b413 3.99MB / 3.99MB 0.2s done
+2025-07-10T06:09:37.6271467Z #9 sha256:e6ef242c157026935bf8a69e6cf19f8f6635e44507c813daf0cc644f2e22396b 629B / 629B 0.2s done
+2025-07-10T06:09:37.6272469Z #9 sha256:d4bca490e609acaaf54ca73363442d31a31fd136a47a20a12370cf2025f0a10b 393B / 393B 0.2s done
+2025-07-10T06:09:37.6273461Z #9 extracting sha256:fc21a1d387f514f53589abea6d67cd6b329dfd3c9059bc96a552af3b3c97b413 0.3s done
+2025-07-10T06:09:37.6274493Z #9 sha256:5406ed7b06d9a94b5bd15843d2a1c7e38796a3ec5dc7f40f16f70cc1d045f453 1.21kB / 1.21kB 0.2s done
+2025-07-10T06:09:37.6275533Z #9 sha256:8a3742a9529dc5c00974dfcf5e465be9f1606ff8a1911527b3928cf86ad57465 1.40kB / 1.40kB 0.3s done
+2025-07-10T06:09:37.6276615Z #9 sha256:0d0c16747d2c6b6c26c064652afcb964c15f1b1e596ec052b2aa19b83948ae27 13.04MB / 13.04MB 0.4s done
+2025-07-10T06:09:37.6277967Z #9 extracting sha256:e6ef242c157026935bf8a69e6cf19f8f6635e44507c813daf0cc644f2e22396b done
+2025-07-10T06:09:37.6278921Z #9 extracting sha256:13fcfbc94648785b918ecc1af675ac5187cdfc30f4fdaf9afa8bd2e9dedf548b done
+2025-07-10T06:09:37.6279877Z #9 extracting sha256:d4bca490e609acaaf54ca73363442d31a31fd136a47a20a12370cf2025f0a10b done
+2025-07-10T06:09:37.6280825Z #9 extracting sha256:5406ed7b06d9a94b5bd15843d2a1c7e38796a3ec5dc7f40f16f70cc1d045f453 done
+2025-07-10T06:09:37.6282025Z #9 extracting sha256:8a3742a9529dc5c00974dfcf5e465be9f1606ff8a1911527b3928cf86ad57465 done
+2025-07-10T06:09:37.6283297Z #9 extracting sha256:0d0c16747d2c6b6c26c064652afcb964c15f1b1e596ec052b2aa19b83948ae27 0.3s done
+2025-07-10T06:09:37.7633468Z #9 DONE 1.3s
+2025-07-10T06:09:37.7633929Z 
+2025-07-10T06:09:37.7634717Z #8 [builder 1/7] FROM docker.io/library/node:20-alpine@sha256:fa316946c0cb1f041fe46dda150f3085b71168555e5706ec0c7466a5bae12244
+2025-07-10T06:09:37.9336093Z #8 extracting sha256:0c54b794b00440f2499cd0df810d1b53ecb69afe190c885956e1e8ff92fec01d 1.2s done
+2025-07-10T06:09:38.0410221Z #8 extracting sha256:a54eeddfc49c9ef8588e38ee29e59a0e7ad1c5967d3d001f253aed0cb11d56a4
+2025-07-10T06:09:38.2401636Z #8 extracting sha256:a54eeddfc49c9ef8588e38ee29e59a0e7ad1c5967d3d001f253aed0cb11d56a4 0.0s done
+2025-07-10T06:09:38.2402733Z #8 extracting sha256:b7f182da327e7013ff937fdf2ce36f3deb5e723dcfccc5fdbdbc708fe03a7698 done
+2025-07-10T06:09:38.2403432Z #8 DONE 1.8s
+2025-07-10T06:09:38.2403607Z 
+2025-07-10T06:09:38.2403915Z #10 [builder 2/7] RUN apk update && apk upgrade && apk add --no-cache dumb-init
+2025-07-10T06:09:38.2404744Z #10 0.125 fetch https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/APKINDEX.tar.gz
+2025-07-10T06:09:38.3725469Z #10 0.257 fetch https://dl-cdn.alpinelinux.org/alpine/v3.22/community/x86_64/APKINDEX.tar.gz
+2025-07-10T06:09:38.8727523Z #10 0.607 v3.22.0-329-gfafb42209c6 [https://dl-cdn.alpinelinux.org/alpine/v3.22/main]
+2025-07-10T06:09:38.8728487Z #10 0.607 v3.22.0-327-g8c92bb319ba [https://dl-cdn.alpinelinux.org/alpine/v3.22/community]
+2025-07-10T06:09:38.8729174Z #10 0.607 OK: 26313 distinct packages available
+2025-07-10T06:09:39.0880776Z #10 0.972 (1/2) Upgrading libcrypto3 (3.5.0-r0 -> 3.5.1-r0)
+2025-07-10T06:09:39.2324728Z #10 1.036 (2/2) Upgrading libssl3 (3.5.0-r0 -> 3.5.1-r0)
+2025-07-10T06:09:39.2325273Z #10 1.049 OK: 10 MiB in 18 packages
+2025-07-10T06:09:39.2325792Z #10 1.117 fetch https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/APKINDEX.tar.gz
+2025-07-10T06:09:39.3684828Z #10 1.188 fetch https://dl-cdn.alpinelinux.org/alpine/v3.22/community/x86_64/APKINDEX.tar.gz
+2025-07-10T06:09:39.6266586Z #10 1.511 (1/1) Installing dumb-init (1.2.5-r3)
+2025-07-10T06:09:39.7295381Z #10 1.516 Executing busybox-1.37.0-r18.trigger
+2025-07-10T06:09:39.7296300Z #10 1.524 OK: 10 MiB in 19 packages
+2025-07-10T06:09:39.8788669Z #10 DONE 1.6s
+2025-07-10T06:09:39.8788954Z 
+2025-07-10T06:09:39.8789112Z #11 [builder 3/7] WORKDIR /app
+2025-07-10T06:09:39.8789473Z #11 DONE 0.0s
+2025-07-10T06:09:39.8789653Z 
+2025-07-10T06:09:39.8789826Z #12 [builder 4/7] COPY package*.json ./
+2025-07-10T06:09:39.8790233Z #12 DONE 0.0s
+2025-07-10T06:09:39.8790418Z 
+2025-07-10T06:09:39.8791033Z #13 [production 2/8] RUN apk update && apk upgrade &&     apk add --no-cache     dumb-init     curl     tzdata &&     rm -rf /var/cache/apk/*
+2025-07-10T06:09:39.8792449Z #13 0.137 fetch https://dl-cdn.alpinelinux.org/alpine/v3.19/main/x86_64/APKINDEX.tar.gz
+2025-07-10T06:09:39.8793448Z #13 0.420 fetch https://dl-cdn.alpinelinux.org/alpine/v3.19/community/x86_64/APKINDEX.tar.gz
+2025-07-10T06:09:39.8794322Z #13 0.749 v3.19.7-223-g59af3bdc7fc [https://dl-cdn.alpinelinux.org/alpine/v3.19/main]
+2025-07-10T06:09:39.8795077Z #13 0.749 v3.19.7-222-gc282411906a [https://dl-cdn.alpinelinux.org/alpine/v3.19/community]
+2025-07-10T06:09:39.8795490Z #13 0.749 OK: 23058 distinct packages available
+2025-07-10T06:09:39.8795830Z #13 1.091 Upgrading critical system libraries and apk-tools:
+2025-07-10T06:09:39.8796172Z #13 1.091 (1/1) Upgrading apk-tools (2.14.0-r5 -> 2.14.4-r0)
+2025-07-10T06:09:39.8796474Z #13 1.331 Executing busybox-1.36.1-r15.trigger
+2025-07-10T06:09:39.8796789Z #13 1.399 Continuing the upgrade transaction with new apk-tools:
+2025-07-10T06:09:39.8797562Z #13 1.405 fetch https://dl-cdn.alpinelinux.org/alpine/v3.19/main/x86_64/APKINDEX.tar.gz
+2025-07-10T06:09:39.8798369Z #13 1.490 fetch https://dl-cdn.alpinelinux.org/alpine/v3.19/community/x86_64/APKINDEX.tar.gz
+2025-07-10T06:09:39.8799188Z #13 1.742 (1/18) Upgrading musl (1.2.4_git20230717-r4 -> 1.2.4_git20230717-r5)
+2025-07-10T06:09:39.8799823Z #13 1.750 (2/18) Upgrading busybox (1.36.1-r15 -> 1.36.1-r19)
+2025-07-10T06:09:39.8800693Z #13 1.769 Executing busybox-1.36.1-r19.post-upgrade
+2025-07-10T06:09:39.8801277Z #13 1.779 (3/18) Upgrading busybox-binsh (1.36.1-r15 -> 1.36.1-r19)
+2025-07-10T06:09:39.8801889Z #13 1.782 (4/18) Upgrading ca-certificates-bundle (20230506-r0 -> 20241121-r1)
+2025-07-10T06:09:39.8802387Z #13 1.790 (5/18) Upgrading libcrypto3 (3.1.4-r6 -> 3.1.8-r0)
+2025-07-10T06:09:39.8802686Z #13 1.825 (6/18) Upgrading libssl3 (3.1.4-r6 -> 3.1.8-r0)
+2025-07-10T06:09:39.8802998Z #13 1.833 (7/18) Upgrading ssl_client (1.36.1-r15 -> 1.36.1-r19)
+2025-07-10T06:09:39.8803346Z #13 1.837 (8/18) Upgrading ca-certificates (20240226-r0 -> 20241121-r1)
+2025-07-10T06:09:39.8803667Z #13 1.869 (9/18) Installing libpsl (0.21.5-r0)
+2025-07-10T06:09:39.8803948Z #13 1.876 (10/18) Upgrading libcurl (8.5.0-r0 -> 8.12.1-r0)
+2025-07-10T06:09:39.8804245Z #13 1.886 (11/18) Upgrading curl (8.5.0-r0 -> 8.12.1-r0)
+2025-07-10T06:09:39.8804605Z #13 1.892 (12/18) Upgrading musl-utils (1.2.4_git20230717-r4 -> 1.2.4_git20230717-r5)
+2025-07-10T06:09:39.8804979Z #13 1.897 (13/18) Upgrading libexpat (2.6.2-r0 -> 2.7.0-r0)
+2025-07-10T06:09:39.8805276Z #13 1.901 (14/18) Upgrading libpng (1.6.40-r0 -> 1.6.44-r0)
+2025-07-10T06:09:39.8805568Z #13 1.906 (15/18) Upgrading xz-libs (5.4.5-r0 -> 5.4.5-r1)
+2025-07-10T06:09:39.8805868Z #13 1.911 (16/18) Upgrading libxml2 (2.11.7-r0 -> 2.11.8-r3)
+2025-07-10T06:09:39.8806165Z #13 1.923 (17/18) Upgrading libxslt (1.1.39-r0 -> 1.1.39-r1)
+2025-07-10T06:09:39.8806454Z #13 1.929 (18/18) Upgrading tzdata (2024a-r0 -> 2025b-r0)
+2025-07-10T06:09:39.8806948Z #13 2.103 Executing busybox-1.36.1-r19.trigger
+2025-07-10T06:09:39.8807489Z #13 2.106 Executing ca-certificates-20241121-r1.trigger
+2025-07-10T06:09:39.8807774Z #13 2.162 OK: 46 MiB in 67 packages
+2025-07-10T06:09:39.8808141Z #13 2.251 fetch https://dl-cdn.alpinelinux.org/alpine/v3.19/main/x86_64/APKINDEX.tar.gz
+2025-07-10T06:09:40.1218297Z #13 2.345 fetch https://dl-cdn.alpinelinux.org/alpine/v3.19/community/x86_64/APKINDEX.tar.gz
+2025-07-10T06:09:40.2014050Z #13 2.575 (1/1) Installing dumb-init (1.2.5-r3)
+2025-07-10T06:09:40.4470485Z #13 2.579 Executing busybox-1.36.1-r19.trigger
+2025-07-10T06:09:40.4470997Z #13 2.584 OK: 46 MiB in 68 packages
+2025-07-10T06:09:40.4471356Z #13 DONE 2.7s
+2025-07-10T06:09:40.4471521Z 
+2025-07-10T06:09:40.4472710Z #14 [production 3/8] RUN if ! getent group nginx > /dev/null 2>&1; then         addgroup -g 1001 -S nginx;     fi &&     if ! getent passwd nginx > /dev/null 2>&1; then         adduser -S -D -H -u 1001 -h /var/cache/nginx -s /sbin/nologin -G nginx -g nginx nginx;     fi
+2025-07-10T06:09:40.4546153Z #14 DONE 0.2s
+2025-07-10T06:09:40.4546536Z 
+2025-07-10T06:09:40.4546968Z #15 [builder 5/7] RUN npm ci --no-audit --no-fund &&     npm cache clean --force
+2025-07-10T06:09:40.6377427Z #15 ...
+2025-07-10T06:09:40.6377720Z 
+2025-07-10T06:09:40.6381019Z #16 [production 4/8] RUN mkdir -p /var/cache/nginx /var/run /var/log/nginx /tmp/client_temp /tmp/proxy_temp_path /tmp/fastcgi_temp /tmp/uwsgi_temp /tmp/scgi_temp &&     chown -R nginx:nginx /var/cache/nginx /var/run /var/log/nginx /tmp/client_temp /tmp/proxy_temp_path /tmp/fastcgi_temp /tmp/uwsgi_temp /tmp/scgi_temp &&     chmod -R 755 /var/cache/nginx /var/run /tmp/client_temp /tmp/proxy_temp_path /tmp/fastcgi_temp /tmp/uwsgi_temp /tmp/scgi_temp
+2025-07-10T06:09:40.6383996Z #16 DONE 0.2s
+2025-07-10T06:09:40.8085574Z 
+2025-07-10T06:09:40.8086115Z #17 [production 5/8] COPY nginx.conf /etc/nginx/nginx.conf
+2025-07-10T06:09:40.8086625Z #17 DONE 0.0s
+2025-07-10T06:09:40.8086800Z 
+2025-07-10T06:09:40.8087377Z #15 [builder 5/7] RUN npm ci --no-audit --no-fund &&     npm cache clean --force
+2025-07-10T06:09:43.6678922Z #15 3.881 
+2025-07-10T06:09:43.6679286Z #15 3.881 added 296 packages in 4s
+2025-07-10T06:09:43.8019353Z #15 3.883 npm notice
+2025-07-10T06:09:43.8019942Z #15 3.883 npm notice New major version of npm available! 10.8.2 -> 11.4.2
+2025-07-10T06:09:43.8020745Z #15 3.883 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.4.2
+2025-07-10T06:09:43.8021466Z #15 3.883 npm notice To update run: npm install -g npm@11.4.2
+2025-07-10T06:09:43.8022367Z #15 3.883 npm notice
+2025-07-10T06:09:43.8022827Z #15 4.015 npm warn using --force Recommended protections disabled.
+2025-07-10T06:09:44.2564242Z #15 DONE 4.5s
+2025-07-10T06:09:44.4514424Z 
+2025-07-10T06:09:44.4514873Z #18 [builder 6/7] COPY . .
+2025-07-10T06:09:44.4515317Z #18 DONE 0.0s
+2025-07-10T06:09:44.4515496Z 
+2025-07-10T06:09:44.4515646Z #19 [builder 7/7] RUN npm run build
+2025-07-10T06:09:44.5591097Z #19 0.258 
+2025-07-10T06:09:44.5591365Z #19 0.258 > youtube-clone@0.0.0 build
+2025-07-10T06:09:44.5591675Z #19 0.258 > vite build
+2025-07-10T06:09:44.5591892Z #19 0.258 
+2025-07-10T06:09:44.7924256Z #19 0.491 vite v7.0.0 building for production...
+2025-07-10T06:09:45.0004920Z #19 0.549 transforming...
+2025-07-10T06:09:46.5577541Z #19 2.257 ✓ 84 modules transformed.
+2025-07-10T06:09:46.7527401Z #19 2.452 rendering chunks...
+2025-07-10T06:09:46.9640814Z #19 2.460 computing gzip size...
+2025-07-10T06:09:46.9643208Z #19 2.471 dist/index.html                     0.46 kB │ gzip:   0.30 kB
+2025-07-10T06:09:46.9643804Z #19 2.471 dist/assets/logo-CSgPM0mC.png       5.24 kB
+2025-07-10T06:09:46.9644290Z #19 2.471 dist/assets/simon-BmxECeH9.png     25.15 kB
+2025-07-10T06:09:46.9644745Z #19 2.471 dist/assets/megan-D9Adoi6e.png     25.89 kB
+2025-07-10T06:09:46.9645190Z #19 2.471 dist/assets/jack-C6zMmRBq.png      26.49 kB
+2025-07-10T06:09:46.9645632Z #19 2.472 dist/assets/tom-BXWr3Rbl.png       29.96 kB
+2025-07-10T06:09:46.9646083Z #19 2.472 dist/assets/cameron-BSbjBJPe.png   31.22 kB
+2025-07-10T06:09:46.9647395Z #19 2.472 dist/assets/index-Bt0QR5qT.css      4.96 kB │ gzip:   1.42 kB
+2025-07-10T06:09:46.9648157Z #19 2.472 dist/assets/index-fuHRDKIN.js     314.18 kB │ gzip: 111.31 kB
+2025-07-10T06:09:46.9648699Z #19 2.472 ✓ built in 1.96s
+2025-07-10T06:09:46.9648995Z #19 DONE 2.5s
+2025-07-10T06:09:46.9737515Z 
+2025-07-10T06:09:46.9738162Z #20 [production 6/8] COPY --from=builder --chown=nginx:nginx /app/dist /usr/share/nginx/html
+2025-07-10T06:09:47.1040897Z #20 DONE 0.0s
+2025-07-10T06:09:47.1041149Z 
+2025-07-10T06:09:47.1042131Z #21 [production 7/8] RUN echo '#!/bin/sh' > /usr/local/bin/healthcheck.sh &&     echo 'curl -f http://localhost:8080/ || exit 1' >> /usr/local/bin/healthcheck.sh &&     chmod +x /usr/local/bin/healthcheck.sh
+2025-07-10T06:09:47.1043098Z #21 DONE 0.1s
+2025-07-10T06:09:47.2487862Z 
+2025-07-10T06:09:47.2488621Z #22 [production 8/8] RUN chown -R nginx:nginx /usr/share/nginx/html &&     chmod -R 755 /usr/share/nginx/html
+2025-07-10T06:09:47.2489102Z #22 DONE 0.1s
+2025-07-10T06:09:47.4008323Z 
+2025-07-10T06:09:47.4008873Z #23 exporting to image
+2025-07-10T06:09:47.4009261Z #23 exporting layers
+2025-07-10T06:09:48.0215330Z #23 exporting layers 0.8s done
+2025-07-10T06:09:48.0401822Z #23 writing image sha256:011163907b1d233782ea4b25c9ca6f7c3d408c3a6e363388cae4224421f95c33 done
+2025-07-10T06:09:48.0402837Z #23 naming to docker.io/library/youtube-clone:test done
+2025-07-10T06:09:48.0403413Z #23 DONE 0.8s
+2025-07-10T06:09:48.0483032Z ##[group]Run docker run -d -p 8080:80 --name test-container youtube-clone:test
+2025-07-10T06:09:48.0483620Z [36;1mdocker run -d -p 8080:80 --name test-container youtube-clone:test[0m
+2025-07-10T06:09:48.0483946Z [36;1msleep 10[0m
+2025-07-10T06:09:48.0484180Z [36;1mcurl -f http://localhost:8080 || exit 1[0m
+2025-07-10T06:09:48.0484457Z [36;1mdocker stop test-container[0m
+2025-07-10T06:09:48.0484689Z [36;1mdocker rm test-container[0m
+2025-07-10T06:09:48.0544614Z shell: /usr/bin/bash -e {0}
+2025-07-10T06:09:48.0544854Z ##[endgroup]
+2025-07-10T06:09:48.0868395Z be339cad0302a818ba13d7ec1b8412549f0bca40e35975f24a905d5581426207
+2025-07-10T06:09:58.3578531Z   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+2025-07-10T06:09:58.3579138Z                                  Dload  Upload   Total   Spent    Left  Speed
+2025-07-10T06:09:58.3579471Z 
+2025-07-10T06:09:58.3583817Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+2025-07-10T06:09:58.3584402Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+2025-07-10T06:09:58.3585240Z curl: (56) Recv failure: Connection reset by peer
+2025-07-10T06:09:58.3605500Z ##[error]Process completed with exit code 1.
+2025-07-10T06:09:58.3692072Z Post job cleanup.
+2025-07-10T06:09:58.6512127Z ##[group]Removing builder
+2025-07-10T06:09:58.7634168Z [command]/usr/bin/docker buildx rm builder-3d3e5670-23b0-4582-b035-7d26be2436ab
+2025-07-10T06:09:58.8948280Z builder-3d3e5670-23b0-4582-b035-7d26be2436ab removed
+2025-07-10T06:09:58.8982519Z ##[endgroup]
+2025-07-10T06:09:58.8984201Z ##[group]Cleaning up certificates
+2025-07-10T06:09:58.8990895Z ##[endgroup]
+2025-07-10T06:09:58.8991381Z ##[group]Post cache
+2025-07-10T06:09:58.8993484Z State not set
+2025-07-10T06:09:58.8994202Z ##[endgroup]
+2025-07-10T06:09:58.9121583Z Post job cleanup.
+2025-07-10T06:09:59.0040305Z [command]/usr/bin/git version
+2025-07-10T06:09:59.0075927Z git version 2.49.0
+2025-07-10T06:09:59.0119245Z Temporarily overriding HOME='/home/runner/work/_temp/a8c89c9a-75a9-4910-a2e0-5e3980b508fb' before making global git config changes
+2025-07-10T06:09:59.0120276Z Adding repository directory to the temporary git global config as a safe directory
+2025-07-10T06:09:59.0131017Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Youtube-Clone/Youtube-Clone
+2025-07-10T06:09:59.0163984Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-07-10T06:09:59.0195160Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-07-10T06:09:59.0413646Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-07-10T06:09:59.0433662Z http.https://github.com/.extraheader
+2025-07-10T06:09:59.0445599Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2025-07-10T06:09:59.0474895Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-07-10T06:09:59.0794839Z Cleaning up orphan processes

@@ -21,7 +21,7 @@ fileExistenceTests:
     shouldExist: true
 
   - name: 'health check script'
-    path: '/usr/share/nginx/html/health'
+    path: '/usr/local/bin/healthcheck.sh'
     shouldExist: true
 
 fileContentTests:
@@ -34,6 +34,6 @@ fileContentTests:
     expectedContents: ['X-Content-Type-Options nosniff;']
 
 metadataTest:
-  exposedPorts: ["80"]
+  exposedPorts: ["8080"]
   user: "nginx"
   workdir: "/usr/share/nginx/html"
