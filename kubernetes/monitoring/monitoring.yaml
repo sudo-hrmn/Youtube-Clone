@@ -1,0 +1,59 @@
+# YouTube Clone - Monitoring Configuration
+# Standard Kubernetes monitoring setup (without Prometheus Operator dependency)
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: youtube-clone-monitoring
+  labels:
+    name: youtube-clone-monitoring
+    app: youtube-clone
+    component: monitoring
+    version: v1
+
+---
+# ConfigMap for monitoring configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: youtube-clone-monitoring-config
+  namespace: youtube-clone-monitoring
+  labels:
+    app: youtube-clone
+    component: monitoring
+    version: v1
+data:
+  monitoring.yaml: |
+    # YouTube Clone Monitoring Configuration
+    # This replaces ServiceMonitor for environments without Prometheus Operator
+    targets:
+      - youtube-clone-v1:9090
+    scrape_configs:
+      - job_name: 'youtube-clone'
+        static_configs:
+          - targets: ['youtube-clone-youtube-clone-service-v1.youtube-clone-v1.svc.cluster.local:9090']
+        scrape_interval: 30s
+        scrape_timeout: 10s
+        metrics_path: /metrics
+
+---
+# Service for monitoring endpoint
+apiVersion: v1
+kind: Service
+metadata:
+  name: youtube-clone-monitoring-service
+  namespace: youtube-clone-monitoring
+  labels:
+    app: youtube-clone
+    component: monitoring
+    version: v1
+spec:
+  selector:
+    app: youtube-clone
+    component: monitoring
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+    protocol: TCP
+  type: ClusterIP

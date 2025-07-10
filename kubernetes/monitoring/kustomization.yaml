@@ -14,7 +14,7 @@ namespace: youtube-clone-monitoring
 
 # Resources
 resources:
-- servicemonitor.yaml
+- monitoring.yaml
 
 # Common Labels
 commonLabels:
