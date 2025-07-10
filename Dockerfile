@@ -68,7 +68,7 @@ COPY --from=builder --chown=nginx:nginx /app/dist /usr/share/nginx/html
 
 # Create health check script
 RUN echo '#!/bin/sh' > /usr/local/bin/healthcheck.sh && \
-    echo 'curl -f http://localhost/health || exit 1' >> /usr/local/bin/healthcheck.sh && \
+    echo 'curl -f http://localhost:8080/ || exit 1' >> /usr/local/bin/healthcheck.sh && \
     chmod +x /usr/local/bin/healthcheck.sh
 
 # Set proper permissions for nginx directories
@@ -79,7 +79,7 @@ RUN chown -R nginx:nginx /usr/share/nginx/html && \
 USER nginx
 
 # Expose port
-EXPOSE 80
+EXPOSE 8080
 
 # Add health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \

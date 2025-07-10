@@ -27,7 +27,7 @@ spec:
   ports:
   - name: http
     port: 80
-    targetPort: http
+    targetPort: 8080
     protocol: TCP
   - name: metrics
     port: 9090
@@ -57,13 +57,13 @@ spec:
   ports:
   - name: http
     port: 80
-    targetPort: http
-    nodePort: 30001
+    targetPort: 8080
+    nodePort: 30003
     protocol: TCP
   - name: https
     port: 443
-    targetPort: http
-    nodePort: 30002
+    targetPort: 8080
+    nodePort: 30004
     protocol: TCP
   selector:
     app: youtube-clone
@@ -110,11 +110,11 @@ spec:
   ports:
   - name: http
     port: 80
-    targetPort: http
+    targetPort: 8080
     protocol: TCP
   - name: https
     port: 443
-    targetPort: http
+    targetPort: 8080
     protocol: TCP
   selector:
     app: youtube-clone

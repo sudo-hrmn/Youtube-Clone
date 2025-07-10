@@ -67,7 +67,7 @@ spec:
         # Port Configuration
         ports:
         - name: http
-          containerPort: 80
+          containerPort: 8080
           protocol: TCP
         
         # Environment Variables

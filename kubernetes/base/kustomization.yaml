@@ -85,11 +85,3 @@ labels:
     environment: production
     tier: frontend
     component: web
-
-# Annotations
-annotations:
-- fields:
-  - metadata/annotations
-  pairs:
-    deployment.kubernetes.io/revision: "1"
-    app.kubernetes.io/instance: youtube-clone-v1
