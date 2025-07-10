@@ -1,9 +1,75 @@
+# YouTube Clone - Configuration Management
+# Professional configuration with environment-specific settings
+
+---
+# Application Configuration
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: youtube-clone-config
   labels:
     app: youtube-clone
+    version: v1
+    component: config
+data:
+  # Application Settings
+  NODE_ENV: "production"
+  PORT: "80"
+  REACT_APP_VERSION: "v1.0.0"
+  REACT_APP_BUILD_DATE: "2025-07-10"
+  
+  # API Configuration
+  API_BASE_URL: "https://www.googleapis.com/youtube/v3"
+  API_TIMEOUT: "30000"
+  API_RETRY_ATTEMPTS: "3"
+  API_RETRY_DELAY: "1000"
+  
+  # YouTube API Settings
+  YOUTUBE_API_VERSION: "v3"
+  YOUTUBE_MAX_RESULTS: "50"
+  YOUTUBE_REGION_CODE: "US"
+  YOUTUBE_SAFE_SEARCH: "moderate"
+  
+  # Performance Settings
+  CACHE_DURATION: "300000"
+  REQUEST_DEBOUNCE_DELAY: "500"
+  LAZY_LOADING_THRESHOLD: "100"
+  
+  # UI Configuration
+  DEFAULT_CATEGORY: "0"
+  ITEMS_PER_PAGE: "20"
+  INFINITE_SCROLL_ENABLED: "true"
+  DARK_MODE_DEFAULT: "false"
+  
+  # Feature Flags
+  ENABLE_ANALYTICS: "true"
+  ENABLE_ERROR_REPORTING: "true"
+  ENABLE_PERFORMANCE_MONITORING: "true"
+  ENABLE_A11Y_FEATURES: "true"
+  
+  # Security Settings
+  CONTENT_SECURITY_POLICY: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googleapis.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https://www.googleapis.com https://i.ytimg.com; media-src 'self' https:; object-src 'none';"
+  
+  # Logging Configuration
+  LOG_LEVEL: "info"
+  LOG_FORMAT: "json"
+  ENABLE_REQUEST_LOGGING: "true"
+  
+  # Health Check Configuration
+  HEALTH_CHECK_INTERVAL: "30"
+  HEALTH_CHECK_TIMEOUT: "5"
+  HEALTH_CHECK_RETRIES: "3"
+
+---
+# Nginx Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: youtube-clone-nginx-config
+  labels:
+    app: youtube-clone
+    version: v1
+    component: nginx
 data:
   nginx.conf: |
     user nginx;
@@ -35,7 +101,7 @@ data:
         types_hash_max_size 2048;
         client_max_body_size 10M;
         
-        # Gzip compression
+        # Compression
         gzip on;
         gzip_vary on;
         gzip_min_length 1024;
@@ -52,12 +118,15 @@ data:
             application/atom+xml
             image/svg+xml;
         
-        # Security headers
-        add_header X-Frame-Options DENY always;
-        add_header X-Content-Type-Options nosniff always;
+        # Security Headers
+        add_header X-Frame-Options "SAMEORIGIN" always;
+        add_header X-Content-Type-Options "nosniff" always;
         add_header X-XSS-Protection "1; mode=block" always;
         add_header Referrer-Policy "strict-origin-when-cross-origin" always;
-        add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://www.googleapis.com https://youtube.googleapis.com;" always;
+        
+        # Rate Limiting
+        limit_req_zone $binary_remote_addr zone=api:10m rate=10r/s;
+        limit_req_zone $binary_remote_addr zone=general:10m rate=1r/s;
         
         server {
             listen 80;
@@ -65,26 +134,48 @@ data:
             root /usr/share/nginx/html;
             index index.html;
             
-            # Health check endpoint
+            # Health Check
             location /health {
                 access_log off;
                 return 200 "healthy\n";
                 add_header Content-Type text/plain;
             }
             
-            # Static assets with long cache
+            # Metrics endpoint
+            location /metrics {
+                access_log off;
+                return 200 "# YouTube Clone Metrics\n";
+                add_header Content-Type text/plain;
+            }
+            
+            # Static assets with caching
             location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
                 expires 1y;
                 add_header Cache-Control "public, immutable";
-                add_header X-Content-Type-Options nosniff;
+                add_header Vary Accept-Encoding;
             }
             
-            # Main application
+            # API proxy (if needed)
+            location /api/ {
+                limit_req zone=api burst=20 nodelay;
+                proxy_pass https://www.googleapis.com/youtube/v3/;
+                proxy_set_header Host www.googleapis.com;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+            }
+            
+            # SPA routing
             location / {
+                limit_req zone=general burst=10 nodelay;
                 try_files $uri $uri/ /index.html;
-                add_header Cache-Control "no-cache, no-store, must-revalidate";
-                add_header Pragma "no-cache";
-                add_header Expires "0";
+                
+                # Cache control for HTML
+                location ~* \.html$ {
+                    expires -1;
+                    add_header Cache-Control "no-cache, no-store, must-revalidate";
+                    add_header Pragma "no-cache";
+                }
             }
             
             # Error pages
@@ -95,8 +186,35 @@ data:
             }
         }
     }
-  app.env: |
+
+---
+# Environment-specific Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: youtube-clone-env-config
+  labels:
+    app: youtube-clone
+    version: v1
+    component: environment
+data:
+  # Development Environment
+  development.env: |
+    NODE_ENV=development
+    REACT_APP_API_BASE_URL=https://www.googleapis.com/youtube/v3
+    REACT_APP_DEBUG=true
+    REACT_APP_LOG_LEVEL=debug
+  
+  # Staging Environment
+  staging.env: |
+    NODE_ENV=staging
+    REACT_APP_API_BASE_URL=https://www.googleapis.com/youtube/v3
+    REACT_APP_DEBUG=false
+    REACT_APP_LOG_LEVEL=info
+  
+  # Production Environment
+  production.env: |
     NODE_ENV=production
-    PORT=80
-    API_TIMEOUT=30000
-    CACHE_TTL=3600
+    REACT_APP_API_BASE_URL=https://www.googleapis.com/youtube/v3
+    REACT_APP_DEBUG=false
+    REACT_APP_LOG_LEVEL=warn
