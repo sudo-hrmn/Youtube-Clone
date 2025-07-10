@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, act } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom'
 import Feed from '../Components/Feed/Feed.jsx'
 
@@ -75,15 +75,27 @@ describe('Feed Component', () => {
     vi.restoreAllMocks()
   })
 
-  it('should render loading state initially', () => {
-    global.fetch.mockResolvedValueOnce({
-      json: () => Promise.resolve(mockVideoData)
-    })
+  it('should render loading state initially', async () => {
+    // Mock fetch to delay response to capture loading state
+    global.fetch.mockImplementationOnce(() => 
+      new Promise(resolve => 
+        setTimeout(() => resolve({
+          json: () => Promise.resolve(mockVideoData)
+        }), 100)
+      )
+    )
 
-    renderWithRouter(<Feed category={0} />)
+    await act(async () => {
+      renderWithRouter(<Feed category={0} />)
+    })
     
-    // Initially, no videos should be rendered
+    // Initially, no videos should be rendered (loading state)
     expect(screen.queryByText('Test Video 1')).not.toBeInTheDocument()
+    
+    // Wait for videos to load
+    await waitFor(() => {
+      expect(screen.getByText('Test Video 1')).toBeInTheDocument()
+    })
   })
 
   it('should fetch and display videos', async () => {
