@@ -50,7 +50,7 @@ spec:
     services: "10"
     secrets: "10"
     configmaps: "10"
-    ingresses.networking.k8s.io: "5"
+    count/ingresses.networking.k8s.io: "5"
     
     # Load Balancers
     services.loadbalancers: "2"
