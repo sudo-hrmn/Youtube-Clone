@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor, act } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom'
 import { value_converter } from '../data.js'
+import { PERFORMANCE_THRESHOLDS, ENVIRONMENT_INFO, performanceUtils } from './performance-config.js'
 
 // Performance test utilities
 const measureRenderTime = async (component) => {
@@ -32,8 +33,6 @@ describe('Performance Tests', () => {
 
   describe('Utility Function Performance', () => {
     it('should handle large numbers efficiently', () => {
-      const start = performance.now()
-      
       const testCases = [
         1000000000000, // 1 trillion
         999999999999,  // Edge case
@@ -46,30 +45,42 @@ describe('Performance Tests', () => {
         0              // Zero
       ]
       
-      testCases.forEach(num => {
-        value_converter(num)
+      const { executionTime } = performanceUtils.measureSync(() => {
+        testCases.forEach(num => {
+          value_converter(num)
+        })
       })
       
-      const end = performance.now()
-      const executionTime = end - start
+      // Use environment-aware performance threshold
+      const threshold = PERFORMANCE_THRESHOLDS.utilityFunction.largeNumbers
       
-      // Should complete in reasonable time for CI environment (adjusted for GitHub Actions overhead)
-      expect(executionTime).toBeLessThan(5) // Increased from 1ms to 5ms for CI environment
+      // Professional assertion with environment context
+      expect(executionTime).toBeLessThan(threshold)
+      
+      // Log performance info for debugging (only in CI)
+      if (ENVIRONMENT_INFO.isCI) {
+        console.log(`Performance Test - Large Numbers: ${executionTime.toFixed(2)}ms (threshold: ${threshold}ms, env: ${ENVIRONMENT_INFO.environment})`)
+      }
     })
 
     it('should handle repeated calls efficiently', () => {
-      const start = performance.now()
+      const { executionTime } = performanceUtils.measureSync(() => {
+        // Simulate heavy usage
+        for (let i = 0; i < 10000; i++) {
+          value_converter(Math.floor(Math.random() * 1000000000))
+        }
+      })
       
-      // Simulate heavy usage
-      for (let i = 0; i < 10000; i++) {
-        value_converter(Math.floor(Math.random() * 1000000000))
+      // Use environment-aware performance threshold
+      const threshold = PERFORMANCE_THRESHOLDS.utilityFunction.repeatedCalls
+      
+      // Professional assertion with environment context
+      expect(executionTime).toBeLessThan(threshold)
+      
+      // Log performance info for debugging (only in CI)
+      if (ENVIRONMENT_INFO.isCI) {
+        console.log(`Performance Test - Repeated Calls: ${executionTime.toFixed(2)}ms (threshold: ${threshold}ms, env: ${ENVIRONMENT_INFO.environment})`)
       }
-      
-      const end = performance.now()
-      const executionTime = end - start
-      
-      // Should complete 10k calls in less than 20ms (increased for CI)
-      expect(executionTime).toBeLessThan(20)
     })
   })
 
@@ -120,24 +131,29 @@ describe('Performance Tests', () => {
         </BrowserRouter>
       )
 
-      const start = performance.now()
+      const { executionTime: rerenderTime } = await performanceUtils.measureAsync(async () => {
+        // Simulate rapid category changes with act() wrapper
+        for (let i = 0; i < 10; i++) {
+          await act(async () => {
+            rerender(
+              <BrowserRouter>
+                <Feed category={i} />
+              </BrowserRouter>
+            )
+          })
+        }
+      })
       
-      // Simulate rapid category changes with act() wrapper
-      for (let i = 0; i < 10; i++) {
-        await act(async () => {
-          rerender(
-            <BrowserRouter>
-              <Feed category={i} />
-            </BrowserRouter>
-          )
-        })
+      // Use environment-aware performance threshold for rapid re-renders
+      const threshold = PERFORMANCE_THRESHOLDS.componentRender.rapidReRender
+      
+      // Professional assertion with environment context
+      expect(rerenderTime).toBeLessThan(threshold)
+      
+      // Log performance info for debugging (only in CI)
+      if (ENVIRONMENT_INFO.isCI) {
+        console.log(`Performance Test - Rapid Re-renders: ${rerenderTime.toFixed(2)}ms (threshold: ${threshold}ms, env: ${ENVIRONMENT_INFO.environment})`)
       }
-      
-      const end = performance.now()
-      const rerenderTime = end - start
-      
-      // Should handle rapid re-renders efficiently (adjusted for CI environment)
-      expect(rerenderTime).toBeLessThan(100) // Increased from 75ms to 100ms for CI environment
     })
   })
 
@@ -211,23 +227,28 @@ describe('Performance Tests', () => {
 
   describe('Bundle Size Considerations', () => {
     it('should import components efficiently', async () => {
-      const start = performance.now()
+      const { executionTime: importTime } = await performanceUtils.measureAsync(async () => {
+        // Dynamic imports to test loading time
+        await Promise.all([
+          import('../Components/Feed/Feed.jsx'),
+          import('../Components/Sidebar/Sidebar.jsx'),
+          import('../Components/PlayVideo/PlayVideo.jsx'),
+          import('../Components/Recommended/Recommended.jsx'),
+          import('../Pages/Home/Home.jsx'),
+          import('../Pages/Video/Video.jsx')
+        ])
+      })
       
-      // Dynamic imports to test loading time
-      await Promise.all([
-        import('../Components/Feed/Feed.jsx'),
-        import('../Components/Sidebar/Sidebar.jsx'),
-        import('../Components/PlayVideo/PlayVideo.jsx'),
-        import('../Components/Recommended/Recommended.jsx'),
-        import('../Pages/Home/Home.jsx'),
-        import('../Pages/Video/Video.jsx')
-      ])
+      // Use environment-aware performance threshold for component imports
+      const threshold = PERFORMANCE_THRESHOLDS.componentRender.initialRender * 2 // Double for multiple imports
       
-      const end = performance.now()
-      const importTime = end - start
+      // Professional assertion with environment context
+      expect(importTime).toBeLessThan(threshold)
       
-      // Should import all components quickly
-      expect(importTime).toBeLessThan(150) // 150ms threshold (increased for CI environment)
+      // Log performance info for debugging (only in CI)
+      if (ENVIRONMENT_INFO.isCI) {
+        console.log(`Performance Test - Component Imports: ${importTime.toFixed(2)}ms (threshold: ${threshold}ms, env: ${ENVIRONMENT_INFO.environment})`)
+      }
     })
   })
 })
