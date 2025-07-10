@@ -28,10 +28,6 @@ commonAnnotations:
 
 # Resources
 resources:
-- namespace.yaml
-- serviceaccount.yaml
-- configmap.yaml
-- secrets.yaml
 - deployment.yaml
 - service.yaml
 - ingress.yaml

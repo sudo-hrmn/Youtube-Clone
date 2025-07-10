@@ -1,0 +1,33 @@
+# YouTube Clone - Infrastructure Kustomization
+# Base infrastructure components
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+metadata:
+  name: youtube-clone-infrastructure
+  annotations:
+    config.kubernetes.io/local-config: "true"
+
+# Namespace
+namespace: youtube-clone-v1
+
+# Resources
+resources:
+- namespace.yaml
+- serviceaccount.yaml
+- configmap.yaml
+- secrets.yaml
+
+# Common Labels
+commonLabels:
+  app: youtube-clone
+  component: infrastructure
+  version: v1
+
+# Common Annotations
+commonAnnotations:
+  app.kubernetes.io/name: youtube-clone
+  app.kubernetes.io/component: infrastructure
+  app.kubernetes.io/part-of: youtube-clone-platform
+  app.kubernetes.io/managed-by: argocd

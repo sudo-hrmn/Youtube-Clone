@@ -1,0 +1,64 @@
+# YouTube Clone - Core Application
+# Main application deployment with all components
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: youtube-clone-core
+  namespace: argocd
+  labels:
+    app: youtube-clone
+    component: core
+    version: v1
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  
+  # Source configuration
+  source:
+    repoURL: https://github.com/sudo-hrmn/Youtube-Clone.git
+    targetRevision: main
+    path: kubernetes/base
+  
+  # Destination configuration
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: youtube-clone-v1
+  
+  # Sync policy
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+    - CreateNamespace=true
+    - PrunePropagationPolicy=foreground
+    - PruneLast=true
+    - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  
+  # Health check configuration
+  ignoreDifferences:
+  - group: apps
+    kind: Deployment
+    jsonPointers:
+    - /spec/replicas
+    - /spec/template/spec/containers/0/image
+  - group: ""
+    kind: Service
+    jsonPointers:
+    - /spec/clusterIP
+    - /spec/ports/0/nodePort
+  
+  # Revision history limit
+  revisionHistoryLimit: 10

@@ -1,0 +1,29 @@
+# YouTube Clone - Service Monitor
+# Prometheus monitoring configuration
+
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: youtube-clone-monitor
+  namespace: youtube-clone-monitoring
+  labels:
+    app: youtube-clone
+    component: monitoring
+    version: v1
+spec:
+  selector:
+    matchLabels:
+      app: youtube-clone
+      version: v1
+  namespaceSelector:
+    matchNames:
+    - youtube-clone-v1
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 30s
+    scrapeTimeout: 10s
+  - port: metrics
+    path: /metrics
+    interval: 30s
+    scrapeTimeout: 10s
