@@ -1,6 +1,16 @@
+![YouTube Clone Banner](./banner.svg)
+
 # YouTube Clone - Docker Deployment
 
 A React-based YouTube clone application containerized with Docker using multi-stage builds for production deployment.
+
+## 📊 DevOps Pipeline
+
+![DevOps Pipeline](./diagrams/pipeline-diagram.svg)
+
+## 🎬 YouTube Clone Application
+
+![YouTube Clone Application](./diagrams/Youtube-clone.png)
 
 ## 🏗️ Architecture
 
