@@ -1,0 +1,396 @@
+name: YouTube Clone CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - 'kubernetes/**/*.yaml'
+      - 'README.md'
+      - 'docs/**'
+  pull_request:
+    branches: [ main ]
+    types: [opened, synchronize, reopened]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: sudo-hrmn/youtube-clone
+  NODE_VERSION: '20'
+
+jobs:
+  # Security and Quality Checks
+  security-scan:
+    name: Security & Quality Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run Dependency Check
+        run: npm audit --audit-level=high
+
+      - name: SonarCloud Scan
+        if: ${{ secrets.SONAR_TOKEN != '' }}
+        uses: SonarSource/sonarqube-scan-action@v5.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: .
+          args: >
+            -Dsonar.projectKey=sudo-hrmn_Youtube-Clone
+            -Dsonar.organization=sudo-hrmn
+
+      - name: SonarCloud Scan Status
+        if: ${{ secrets.SONAR_TOKEN == '' }}
+        run: |
+          echo "⚠️ SonarCloud scan skipped - SONAR_TOKEN not configured"
+          echo "To enable SonarCloud analysis:"
+          echo "1. Go to https://sonarcloud.io"
+          echo "2. Import your repository: sudo-hrmn/Youtube-Clone"
+          echo "3. Get project token and add to GitHub Secrets as SONAR_TOKEN"
+
+  # Unit and Integration Tests
+  test:
+    name: Unit & Integration Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20.x, 22.x]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm run test:run
+
+      - name: Run integration tests
+        run: npm run test:integration
+
+      - name: Generate test coverage
+        run: npm run test:coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results-${{ matrix.node-version }}
+          path: |
+            coverage/
+            test-results.xml
+
+  # Build Application
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    needs: [security-scan, test]
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      short-sha: ${{ steps.version.outputs.short-sha }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Generate version info
+        id: version
+        run: |
+          SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
+          VERSION=$(date +%Y%m%d)-${SHORT_SHA}
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "short-sha=${SHORT_SHA}" >> $GITHUB_OUTPUT
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: dist/
+          retention-days: 30
+
+  # Docker Build and Security Scan
+  docker:
+    name: Docker Build & Security Scan
+    runs-on: ubuntu-latest
+    needs: [build]
+    outputs:
+      image-digest: ${{ steps.build.outputs.digest }}
+      image-tag: ${{ steps.meta.outputs.tags }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: dist/
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha,prefix=main-
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=${{ needs.build.outputs.version }}
+
+      - name: Build Docker image
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+            VCS_REF=${{ github.sha }}
+            VERSION=${{ needs.build.outputs.version }}
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main-${{ needs.build.outputs.short-sha }}
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      - name: Run container structure test
+        run: |
+          curl -LO https://storage.googleapis.com/container-structure-test/latest/container-structure-test-linux-amd64
+          chmod +x container-structure-test-linux-amd64
+          sudo mv container-structure-test-linux-amd64 /usr/local/bin/container-structure-test
+          container-structure-test test --image ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main-${{ needs.build.outputs.short-sha }} --config .github/container-structure-test.yaml
+
+  # Deploy to Development (for PR testing)
+  deploy-dev:
+    name: Deploy to Development
+    runs-on: ubuntu-latest
+    needs: [docker]
+    if: github.event_name == 'pull_request'
+    environment:
+      name: development
+      url: https://youtube-clone-dev.yourdomain.com
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'v1.28.0'
+
+      - name: Configure kubectl
+        run: |
+          echo "${{ secrets.KUBE_CONFIG_DEV }}" | base64 -d > kubeconfig
+          export KUBECONFIG=kubeconfig
+
+      - name: Update image tag for development
+        run: |
+          cd kubernetes/overlays/development
+          sed -i "s|newTag: .*|newTag: main-${{ needs.build.outputs.short-sha }}|g" kustomization.yaml
+
+      - name: Deploy to development
+        run: |
+          export KUBECONFIG=kubeconfig
+          cd kubernetes/overlays/development
+          kubectl apply -k .
+          kubectl rollout status deployment/youtube-clone -n youtube-clone-dev --timeout=300s
+
+      - name: Run smoke tests
+        run: |
+          sleep 30
+          curl -f https://youtube-clone-dev.yourdomain.com/health || exit 1
+
+  # Deploy to Staging (on main branch push)
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [docker]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment:
+      name: staging
+      url: https://youtube-clone-staging.yourdomain.com
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'v1.28.0'
+
+      - name: Configure kubectl
+        run: |
+          echo "${{ secrets.KUBE_CONFIG_STAGING }}" | base64 -d > kubeconfig
+          export KUBECONFIG=kubeconfig
+
+      - name: Update image tag for staging
+        run: |
+          cd kubernetes/overlays/staging
+          sed -i "s|newTag: .*|newTag: main-${{ needs.build.outputs.short-sha }}|g" kustomization.yaml
+
+      - name: Deploy to staging
+        run: |
+          export KUBECONFIG=kubeconfig
+          cd kubernetes/overlays/staging
+          kubectl apply -k .
+          kubectl rollout status deployment/youtube-clone -n youtube-clone-staging --timeout=300s
+
+      - name: Run integration tests
+        run: |
+          sleep 30
+          curl -f https://youtube-clone-staging.yourdomain.com/health || exit 1
+
+  # Deploy to Production (manual approval required)
+  deploy-prod:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [docker, deploy-staging]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment:
+      name: production
+      url: https://youtube-clone.yourdomain.com
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'v1.28.0'
+
+      - name: Configure kubectl
+        run: |
+          echo "${{ secrets.KUBE_CONFIG_PROD }}" | base64 -d > kubeconfig
+          export KUBECONFIG=kubeconfig
+
+      - name: Update image tag for production
+        run: |
+          cd kubernetes/overlays/production
+          sed -i "s|newTag: .*|newTag: main-${{ needs.build.outputs.short-sha }}|g" kustomization.yaml
+
+      - name: Deploy to production
+        run: |
+          export KUBECONFIG=kubeconfig
+          cd kubernetes/overlays/production
+          kubectl apply -k .
+          kubectl rollout status deployment/youtube-clone -n youtube-clone-prod --timeout=600s
+
+      - name: Update deployment manifest in repo
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          
+          # Update the image tag in the base kustomization
+          NEW_TAG="main-${{ needs.build.outputs.short-sha }}"
+          sed -i "s|newTag: .*|newTag: ${NEW_TAG}|g" kubernetes/base/kustomization.yaml
+          
+          git add kubernetes/base/kustomization.yaml kubernetes/overlays/production/kustomization.yaml
+          git commit -m "chore: update image tag to ${NEW_TAG} [skip ci]" || echo "No changes to commit"
+          git push
+
+      - name: Run production health checks
+        run: |
+          sleep 60
+          curl -f https://youtube-clone.yourdomain.com/health || exit 1
+          
+      - name: Notify deployment success
+        uses: 8398a7/action-slack@v3
+        if: success()
+        with:
+          status: success
+          text: "🚀 YouTube Clone successfully deployed to production from main branch!"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  # Cleanup
+  cleanup:
+    name: Cleanup Artifacts
+    runs-on: ubuntu-latest
+    needs: [deploy-prod]
+    if: always()
+    steps:
+      - name: Delete old artifacts
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.runId,
+            });
+            
+            for (const artifact of artifacts.data.artifacts) {
+              if (artifact.name.startsWith('test-results-')) {
+                await github.rest.actions.deleteArtifact({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  artifact_id: artifact.id,
+                });
+              }
+            }

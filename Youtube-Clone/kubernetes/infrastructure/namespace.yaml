@@ -1,0 +1,98 @@
+# YouTube Clone - Namespace Configuration
+# Professional namespace setup with resource quotas and limits
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: youtube-clone-v1
+  labels:
+    name: youtube-clone-v1
+    app: youtube-clone
+    version: v1
+    environment: production
+    tier: frontend
+    component: web
+    managed-by: argocd
+  annotations:
+    app.kubernetes.io/name: youtube-clone
+    app.kubernetes.io/version: v1.0.0
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/part-of: youtube-clone-platform
+    app.kubernetes.io/managed-by: argocd
+    kubernetes.io/managed-by: argocd
+    argocd.argoproj.io/sync-wave: "-1"
+
+---
+# Resource Quota for the namespace
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: youtube-clone-resource-quota
+  namespace: youtube-clone-v1
+  labels:
+    app: youtube-clone
+    version: v1
+spec:
+  hard:
+    # Compute Resources
+    requests.cpu: "2"
+    requests.memory: 4Gi
+    limits.cpu: "4"
+    limits.memory: 8Gi
+    
+    # Storage Resources
+    requests.storage: 10Gi
+    persistentvolumeclaims: "5"
+    
+    # Object Counts
+    pods: "10"
+    replicationcontrollers: "5"
+    services: "10"
+    secrets: "10"
+    configmaps: "10"
+    count/ingresses.networking.k8s.io: "5"
+    
+    # Load Balancers
+    services.loadbalancers: "2"
+    services.nodeports: "5"
+
+---
+# Limit Range for default resource constraints
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: youtube-clone-limit-range
+  namespace: youtube-clone-v1
+  labels:
+    app: youtube-clone
+    version: v1
+spec:
+  limits:
+  # Default limits for containers
+  - default:
+      cpu: "500m"
+      memory: "512Mi"
+      ephemeral-storage: "1Gi"
+    defaultRequest:
+      cpu: "100m"
+      memory: "128Mi"
+      ephemeral-storage: "100Mi"
+    type: Container
+  
+  # Limits for pods
+  - max:
+      cpu: "2"
+      memory: "2Gi"
+      ephemeral-storage: "4Gi"
+    min:
+      cpu: "50m"
+      memory: "64Mi"
+      ephemeral-storage: "50Mi"
+    type: Pod
+  
+  # Limits for PVCs
+  - max:
+      storage: "5Gi"
+    min:
+      storage: "1Gi"
+    type: PersistentVolumeClaim

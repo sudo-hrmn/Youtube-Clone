@@ -1,0 +1,185 @@
+# YouTube Clone - Network Policy Configuration
+# Professional network security with micro-segmentation
+
+---
+# Default Deny All Network Policy
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: youtube-clone-default-deny
+  namespace: youtube-clone-v1
+  labels:
+    app: youtube-clone
+    version: v1
+    component: security
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+
+---
+# Allow Ingress from Ingress Controller
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: youtube-clone-allow-ingress
+  namespace: youtube-clone-v1
+  labels:
+    app: youtube-clone
+    version: v1
+    component: security
+spec:
+  podSelector:
+    matchLabels:
+      app: youtube-clone
+  policyTypes:
+  - Ingress
+  ingress:
+  # Allow from ingress controller
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: ingress-nginx
+    - namespaceSelector:
+        matchLabels:
+          name: istio-system
+    ports:
+    - protocol: TCP
+      port: 80
+  # Allow from same namespace
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: youtube-clone-v1
+    ports:
+    - protocol: TCP
+      port: 80
+  # Allow from monitoring namespace
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: monitoring
+    ports:
+    - protocol: TCP
+      port: 80
+    - protocol: TCP
+      port: 9090
+
+---
+# Allow Egress for External APIs
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: youtube-clone-allow-egress
+  namespace: youtube-clone-v1
+  labels:
+    app: youtube-clone
+    version: v1
+    component: security
+spec:
+  podSelector:
+    matchLabels:
+      app: youtube-clone
+  policyTypes:
+  - Egress
+  egress:
+  # Allow DNS resolution
+  - to: []
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+  # Allow HTTPS to external APIs
+  - to: []
+    ports:
+    - protocol: TCP
+      port: 443
+  # Allow HTTP (for health checks and internal communication)
+  - to: []
+    ports:
+    - protocol: TCP
+      port: 80
+  # Allow to same namespace
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          name: youtube-clone-v1
+  # Allow to kube-system (for service discovery)
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          name: kube-system
+
+---
+# Allow Internal Communication
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: youtube-clone-allow-internal
+  namespace: youtube-clone-v1
+  labels:
+    app: youtube-clone
+    version: v1
+    component: security
+spec:
+  podSelector:
+    matchLabels:
+      app: youtube-clone
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  # Allow from same app
+  - from:
+    - podSelector:
+        matchLabels:
+          app: youtube-clone
+    ports:
+    - protocol: TCP
+      port: 80
+  egress:
+  # Allow to same app
+  - to:
+    - podSelector:
+        matchLabels:
+          app: youtube-clone
+    ports:
+    - protocol: TCP
+      port: 80
+
+---
+# Allow Monitoring Access
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: youtube-clone-allow-monitoring
+  namespace: youtube-clone-v1
+  labels:
+    app: youtube-clone
+    version: v1
+    component: security
+spec:
+  podSelector:
+    matchLabels:
+      app: youtube-clone
+  policyTypes:
+  - Ingress
+  ingress:
+  # Allow Prometheus scraping
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: monitoring
+    - podSelector:
+        matchLabels:
+          app: prometheus
+    ports:
+    - protocol: TCP
+      port: 9090
+  # Allow health checks from load balancer
+  - from: []
+    ports:
+    - protocol: TCP
+      port: 80

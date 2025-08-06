@@ -1,0 +1,30 @@
+# YouTube Clone - Monitoring Kustomization
+# Monitoring components
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+metadata:
+  name: youtube-clone-monitoring
+  annotations:
+    config.kubernetes.io/local-config: "true"
+
+# Namespace
+namespace: youtube-clone-monitoring
+
+# Resources
+resources:
+- monitoring.yaml
+
+# Common Labels
+commonLabels:
+  app: youtube-clone
+  component: monitoring
+  version: v1
+
+# Common Annotations
+commonAnnotations:
+  app.kubernetes.io/name: youtube-clone
+  app.kubernetes.io/component: monitoring
+  app.kubernetes.io/part-of: youtube-clone-platform
+  app.kubernetes.io/managed-by: argocd

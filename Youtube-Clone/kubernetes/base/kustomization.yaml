@@ -1,0 +1,87 @@
+# YouTube Clone - Kustomize Base Configuration
+# Professional Kubernetes resource management
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+metadata:
+  name: youtube-clone-base
+  annotations:
+    config.kubernetes.io/local-config: "true"
+
+# Namespace
+namespace: youtube-clone-v1
+
+# Common Labels
+commonLabels:
+  app: youtube-clone
+  version: v1
+  managed-by: kustomize
+
+# Common Annotations
+commonAnnotations:
+  app.kubernetes.io/name: youtube-clone
+  app.kubernetes.io/version: v1.0.0
+  app.kubernetes.io/component: frontend
+  app.kubernetes.io/part-of: youtube-clone-platform
+  app.kubernetes.io/managed-by: argocd
+
+# Resources
+resources:
+- deployment.yaml
+- service.yaml
+- ingress.yaml
+- hpa.yaml
+- pdb.yaml
+- networkpolicy.yaml
+
+# ConfigMap Generator
+configMapGenerator:
+- name: youtube-clone-build-info
+  literals:
+  - BUILD_DATE=2025-07-10
+  - BUILD_VERSION=v1.0.0
+  - GIT_COMMIT=latest
+  - BUILD_NUMBER=1
+
+# Secret Generator
+secretGenerator:
+- name: youtube-clone-api-secrets
+  literals:
+  - YOUTUBE_API_KEY=your-api-key-here
+  type: Opaque
+
+# Images
+images:
+- name: youtube-clone
+  newName: ghcr.io/sudo-hrmn/youtube-clone
+  newTag: latest
+
+# Patches
+patches:
+- target:
+    kind: Deployment
+    name: youtube-clone-deployment
+  patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/0/image
+      value: ghcr.io/sudo-hrmn/youtube-clone:latest
+
+# Replicas
+replicas:
+- name: youtube-clone-deployment
+  count: 3
+
+# Name Prefix
+namePrefix: youtube-clone-
+
+# Name Suffix
+nameSuffix: -v1
+
+# Labels
+labels:
+- includeSelectors: true
+  pairs:
+    environment: production
+    tier: frontend
+    component: web

@@ -1,0 +1,242 @@
+# YouTube Clone - Professional Kubernetes Ingress Configuration
+# Multi-environment ingress with SSL/TLS and advanced routing
+
+---
+# Primary Ingress for production traffic
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: youtube-clone-ingress
+  labels:
+    app: youtube-clone
+    version: v1
+    component: frontend
+    tier: web
+  annotations:
+    # Ingress Controller Configuration
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    
+    # SSL/TLS Configuration
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-protocols: "TLSv1.2 TLSv1.3"
+    nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-RSA-AES128-GCM-SHA256,ECDHE-RSA-AES256-GCM-SHA384"
+    
+    # Security Headers
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      add_header X-Frame-Options "SAMEORIGIN" always;
+      add_header X-Content-Type-Options "nosniff" always;
+      add_header X-XSS-Protection "1; mode=block" always;
+      add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+      add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googleapis.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https://www.googleapis.com https://i.ytimg.com; media-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'self';" always;
+      add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+    
+    # Performance Optimizations
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-buffering: "on"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: "8k"
+    
+    # Compression
+    nginx.ingress.kubernetes.io/enable-brotli: "true"
+    nginx.ingress.kubernetes.io/brotli-level: "6"
+    nginx.ingress.kubernetes.io/brotli-types: "text/xml image/svg+xml application/x-font-ttf image/vnd.microsoft.icon application/x-font-opentype application/json font/eot application/vnd.ms-fontobject application/javascript font/otf application/xml application/xhtml+xml text/javascript application/x-javascript text/plain application/x-font-truetype application/xml+rss image/x-icon font/opentype text/css image/x-win-bitmap"
+    
+    # Rate Limiting
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+    nginx.ingress.kubernetes.io/rate-limit-window: "1m"
+    nginx.ingress.kubernetes.io/rate-limit-connections: "10"
+    
+    # CORS Configuration
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://youtube-clone.com,https://www.youtube-clone.com"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization"
+    
+    # Monitoring
+    nginx.ingress.kubernetes.io/enable-access-log: "true"
+    nginx.ingress.kubernetes.io/access-log-path: "/var/log/nginx/youtube-clone.access.log"
+    nginx.ingress.kubernetes.io/error-log-path: "/var/log/nginx/youtube-clone.error.log"
+    
+spec:
+  ingressClassName: nginx
+  
+  # TLS Configuration
+  tls:
+  - hosts:
+    - youtube-clone.com
+    - www.youtube-clone.com
+    - api.youtube-clone.com
+    secretName: youtube-clone-tls
+  - hosts:
+    - youtube-clone.local
+    - dev.youtube-clone.local
+    secretName: youtube-clone-dev-tls
+  
+  # Routing Rules
+  rules:
+  # Production Domain
+  - host: youtube-clone.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: youtube-clone-service
+            port:
+              number: 80
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: youtube-clone-api-service
+            port:
+              number: 8080
+      - path: /health
+        pathType: Exact
+        backend:
+          service:
+            name: youtube-clone-service
+            port:
+              number: 80
+      - path: /metrics
+        pathType: Exact
+        backend:
+          service:
+            name: youtube-clone-service
+            port:
+              number: 9090
+  
+  # WWW Redirect
+  - host: www.youtube-clone.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: youtube-clone-service
+            port:
+              number: 80
+  
+  # Development/Local Domain
+  - host: youtube-clone.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: youtube-clone-service
+            port:
+              number: 80
+  
+  # Development Subdomain
+  - host: dev.youtube-clone.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: youtube-clone-service
+            port:
+              number: 80
+  
+  # Catch-all for any other domains (optional)
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: youtube-clone-service
+            port:
+              number: 80
+
+---
+# Development Ingress (without SSL for local testing)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: youtube-clone-ingress-dev
+  labels:
+    app: youtube-clone
+    version: v1
+    component: frontend
+    tier: web
+    environment: development
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, OPTIONS"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: localhost
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: youtube-clone-service
+            port:
+              number: 80
+  - host: youtube-clone.localhost
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: youtube-clone-service
+            port:
+              number: 80
+
+---
+# API-specific Ingress (if you have separate API services)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: youtube-clone-api-ingress
+  labels:
+    app: youtube-clone
+    version: v1
+    component: api
+    tier: backend
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/rate-limit: "200"
+    nginx.ingress.kubernetes.io/rate-limit-window: "1m"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - api.youtube-clone.com
+    secretName: youtube-clone-api-tls
+  rules:
+  - host: api.youtube-clone.com
+    http:
+      paths:
+      - path: /v1(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: youtube-clone-api-service
+            port:
+              number: 8080

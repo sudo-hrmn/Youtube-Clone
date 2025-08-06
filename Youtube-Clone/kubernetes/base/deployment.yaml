@@ -1,0 +1,216 @@
+# YouTube Clone - Professional Kubernetes Deployment
+# Optimized for production with GitHub Container Registry integration
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: youtube-clone-deployment
+  labels:
+    app: youtube-clone
+    version: v1
+    component: frontend
+    tier: web
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: youtube-clone
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: youtube-clone
+        version: v1
+        component: frontend
+        tier: web
+      annotations:
+        # Prometheus monitoring
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "80"
+        prometheus.io/path: "/metrics"
+        # Deployment metadata
+        deployment.kubernetes.io/revision: "1"
+        app.kubernetes.io/name: "youtube-clone"
+        app.kubernetes.io/version: "v1"
+        app.kubernetes.io/component: "frontend"
+        app.kubernetes.io/part-of: "youtube-clone-platform"
+        app.kubernetes.io/managed-by: "argocd"
+    spec:
+      # GitHub Container Registry Image Pull Secret
+      imagePullSecrets:
+      - name: github-container-registry
+      
+      # Security Context
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      
+      # Service Account
+      serviceAccountName: youtube-clone-sa
+      
+      # Container Configuration
+      containers:
+      - name: youtube-clone
+        # GitHub Container Registry Image
+        image: ghcr.io/sudo-hrmn/youtube-clone:latest
+        imagePullPolicy: Always
+        
+        # Port Configuration
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        
+        # Environment Variables
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: PORT
+          value: "80"
+        - name: API_BASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: youtube-clone-config
+              key: API_BASE_URL
+        - name: YOUTUBE_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: youtube-clone-secrets
+              key: YOUTUBE_API_KEY
+        - name: REACT_APP_VERSION
+          value: "v1.0.0"
+        - name: REACT_APP_BUILD_DATE
+          value: "2025-07-10"
+        
+        # Resource Management
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+            ephemeral-storage: "1Gi"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+            ephemeral-storage: "2Gi"
+        
+        # Health Checks
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+          successThreshold: 1
+        
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+          successThreshold: 1
+        
+        # Startup Probe (for slow starting containers)
+        startupProbe:
+          httpGet:
+            path: /
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 6
+          successThreshold: 1
+        
+        # Security Context
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1000
+          runAsGroup: 1000
+          capabilities:
+            drop:
+            - ALL
+            add:
+            - NET_BIND_SERVICE
+        
+        # Volume Mounts
+        volumeMounts:
+        - name: tmp-volume
+          mountPath: /tmp
+        - name: cache-volume
+          mountPath: /app/.cache
+        - name: nginx-cache
+          mountPath: /var/cache/nginx
+        - name: nginx-run
+          mountPath: /var/run
+      
+      # Volumes
+      volumes:
+      - name: tmp-volume
+        emptyDir:
+          sizeLimit: 100Mi
+      - name: cache-volume
+        emptyDir:
+          sizeLimit: 200Mi
+      - name: nginx-cache
+        emptyDir:
+          sizeLimit: 100Mi
+      - name: nginx-run
+        emptyDir:
+          sizeLimit: 10Mi
+      
+      # Pod Scheduling
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - youtube-clone
+              topologyKey: kubernetes.io/hostname
+      
+      # Tolerations
+      tolerations:
+      - key: "node.kubernetes.io/not-ready"
+        operator: "Exists"
+        effect: "NoExecute"
+        tolerationSeconds: 300
+      - key: "node.kubernetes.io/unreachable"
+        operator: "Exists"
+        effect: "NoExecute"
+        tolerationSeconds: 300
+      
+      # DNS Configuration
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        options:
+        - name: ndots
+          value: "2"
+        - name: edns0
+      
+      # Restart Policy
+      restartPolicy: Always
+      
+      # Termination Grace Period
+      terminationGracePeriodSeconds: 30
