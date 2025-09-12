@@ -1,16 +1,16 @@
-![YouTube Clone Banner](./banner.svg)
+![YouTube Clone Banner](./docs/assets/banner.svg)
 
-# YouTube Clone - Docker Deployment
+# YouTube Clone - Enterprise DevOps Implementation
 
-A React-based YouTube clone application containerized with Docker using multi-stage builds for production deployment.
+A React-based YouTube clone application with complete CI/CD pipeline, containerization, and Kubernetes deployment.
 
 ## 📊 DevOps Pipeline
 
-![DevOps Pipeline](./diagrams/pipeline-diagram.svg)
+![DevOps Pipeline](./docs/assets/pipeline-diagram.svg)
 
 ## 🎬 YouTube Clone Application
 
-![YouTube Clone Application](./diagrams/Youtube-clone.png)
+![YouTube Clone Application](./docs/diagrams/Youtube-clone.png)
 
 ## 🏗️ Architecture
 
@@ -28,16 +28,30 @@ youtube-clone/
 │   ├── Components/         # React components
 │   ├── Pages/             # Page components
 │   ├── assets/            # Static assets
+│   ├── test/              # Test files
 │   ├── App.jsx            # Main App component
 │   └── main.jsx           # Entry point
 ├── public/                # Public assets
-├── kubernetes/            # Kubernetes manifests
-├── Dockerfile             # Multi-stage Docker configuration
-├── docker-compose.yml     # Docker Compose configuration
-├── nginx.conf             # Nginx configuration for production
-├── .dockerignore          # Docker ignore file
-├── Makefile              # Docker management commands
-└── package.json          # Node.js dependencies
+├── infrastructure/        # DevOps configurations
+│   ├── docker/           # Docker configurations
+│   │   ├── docker-compose.yml
+│   │   ├── Dockerfile
+│   │   └── nginx.conf
+│   ├── k8s/              # Kubernetes manifests
+│   │   ├── base/         # Base configurations
+│   │   ├── overlays/     # Environment overlays
+│   │   ├── monitoring/   # Monitoring setup
+│   │   └── infrastructure/
+│   └── argocd-application.yaml
+├── scripts/              # Build and deployment scripts
+│   └── Makefile         # Docker management commands
+├── docs/                 # Documentation and assets
+│   ├── assets/          # Images and diagrams
+│   └── diagrams/        # Architecture diagrams
+├── .github/             # CI/CD workflows
+│   └── workflows/       # GitHub Actions
+├── package.json         # Node.js dependencies
+└── README.md           # This file
 ```
 
 ## 🚀 Quick Start
@@ -51,7 +65,7 @@ youtube-clone/
 #### Build and Run Production
 ```bash
 # Build the production image
-docker build -t youtube-clone:latest --target production .
+docker build -f infrastructure/docker/Dockerfile -t youtube-clone:latest --target production .
 
 # Run the container
 docker run -d -p 8080:8080 --name youtube-clone-app youtube-clone:latest
@@ -63,7 +77,7 @@ open http://localhost:8080
 #### Run Development Mode
 ```bash
 # Build development image
-docker build -t youtube-clone:dev --target development .
+docker build -f infrastructure/docker/Dockerfile -t youtube-clone:dev --target development .
 
 # Run development container with volume mounting
 docker run -d -p 5173:5173 -v $(pwd):/app -v /app/node_modules --name youtube-clone-dev youtube-clone:dev
@@ -77,7 +91,7 @@ open http://localhost:5173
 #### Production Mode
 ```bash
 # Start production container
-docker-compose up -d youtube-clone-prod
+docker-compose -f infrastructure/docker/docker-compose.yml up -d youtube-clone-prod
 
 # Access the application
 open http://localhost:8080
@@ -86,7 +100,7 @@ open http://localhost:8080
 #### Development Mode
 ```bash
 # Start development container
-docker-compose --profile dev up -d youtube-clone-dev
+docker-compose -f infrastructure/docker/docker-compose.yml --profile dev up -d youtube-clone-dev
 
 # Access development server
 open http://localhost:5173
@@ -95,6 +109,9 @@ open http://localhost:5173
 ### Option 3: Using Makefile
 
 ```bash
+# Navigate to scripts directory
+cd scripts/
+
 # Build production image
 make build
 
